@@ -1,6 +1,7 @@
 import socket
 import time
 import mysql.connector
+from jinja2 import Template
 
 def f1(request):
     '''
@@ -58,6 +59,29 @@ def f3(request):
     response =response.replace('@@content@@',content)
     return(response)
     
+def f4(request=None):
+    '''
+        与f3相比，使用第三方工具进行模板渲染
+        需要jinja2的模块
+        jinja2专门用来做模板渲染
+        from jinja2 import Template
+    '''
+    connector =mysql.connector.connect(user='root',password='0125',database='py_write')
+    cursor =connector.cursor()
+    cursor.execute('SELECT name,score,date FROM db_movie ORDER BY score DESC,date DESC;')
+    movie_list =cursor.fetchall()
+    cursor.close()
+    connector.close()
+    f =open('D:/py/py_django/ep1/dynamic_ep0/movie_f4.html','r',encoding='utf-8',errors='ignore')
+    response =f.read()
+    f.close()
+    #把自己的模板放入到Template中
+    template =Template(response)
+    #进行渲染,得到渲染后的全部html
+    response =template.render(movie_list =movie_list) 
+    return response
+    
+
 def run(routers):
     sock =socket.socket()
 
@@ -116,6 +140,7 @@ def main():
         ('/x',f1),
         ('/xx',f2),
         ('/xxx',f3),
+        ('/xxxx',f4),
     ]
     run(routers)
 

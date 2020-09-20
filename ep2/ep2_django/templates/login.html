@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+    <head lang="utf-8">
+        <meta charset="utf-8">
+        <title>ep2_django_login</title>
+        <!-- herf中css的路径 要在django项目中setting中 /static url/xxx.css  css文件要放在STATICFILES_DIRS中定义的文件夹中-->
+        <link rel="stylesheet" href="/static/login.css">
+    </head>
+    <body>
+        <h1>用户登录</h1>
+        <form method="POST" action="/login/">
+            <input type="text" name="username">
+            <input type="password" name="password">
+            <input type="submit" value="登录">
+            {{message}}
+        </form>
+    </body>
+</html>
