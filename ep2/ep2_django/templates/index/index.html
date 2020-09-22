@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+    <head lang="en">
+        <meta charset="utf-8">
+        <title>index</title>
+    </head>
+    <body>
+        <h1>INDEX</h1>
+        <p>{{name}}</p>
+        <p>{{users.0}}</p>
+        <p>{{users.1}}</p>
+        <p>{{user_dict.k1}}</p>
+        <p>{{user_dict.k2}}</p>
+        <p>循环</p>
+        <ul>
+        {% for item in users %}
+            <li>{{item}}</li>
+        {% endfor %}
+        </ul>
+        <table border="1">
+            {% for row in user_list_dict %}
+                <tr>
+                    <td>{{row.id}}</td>
+                    <td>{{row.name}}</td>
+                    <td>{{row.email}}</td>
+                    <td><a>编辑</a> | <a href="/del/?nid={{row.id}}">删除</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

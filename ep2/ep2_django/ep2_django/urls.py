@@ -19,6 +19,21 @@ from django.shortcuts import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 
+def index(request):
+    return render(
+        request,
+        'index/index.html',
+        {
+            'name':'alxe',
+            'users':['apple','lijie'],
+            'user_dict':{'k1':'v1','k2':'v2'},
+            'user_list_dict':[
+                {'id':1,'name':'alex','email':'aaa@a.com'},
+                {'id':2,'name':'tom','email':'bbb@a.com'},
+            ]
+        }
+    )
+
 def login(request):
     '''
         处理用户请求，并返回其内容
@@ -49,7 +64,7 @@ def login(request):
         u =request.POST.get('username')  
         p =request.POST.get('password')
         if u=='root' and p=='0125':
-            return redirect('http://www.baidu.com')
+            return redirect('/index/')
         else:
             #django里面集成了模板渲染器也就是jinja2，render第三个参数就是替换html中特殊的字符，用的就是jinja2模块
             return render(request,'login.html',{'message':'wrong id or password'})
@@ -57,5 +72,6 @@ def login(request):
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path(r'login/',login)
+    path(r'login/',login),
+    path(r'index/',index),
 ]

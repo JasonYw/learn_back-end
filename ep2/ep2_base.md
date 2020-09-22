@@ -71,5 +71,57 @@
 
     若出现模板无法找不到问题，去setting里找TEMPLATES、STATICFILES_DIRS、STATIC_URL问题，以及目录是否建立在根目录下 
 
-      
+4.url对应关系
+    /login/    login
 
+    def login(request): reques代表用户请求的所有数据，请求头+请求体
+        request.method  代表请求的类型 post get 或者 put...
+        request.GET 代表GET请求中的参数，字典形式
+        request.POST 代表POST请求中的FORM DATA表单数据，字典形式
+
+        return HttpResponse(...) 用于给客户端返回字符串
+        return render(request,'xxx.html',{....}) 用于给客户端返回HTML源文件，并且可以加渲染
+        return redirect('跳转的网址') 用于网页跳转，重定向
+    
+    备注： 
+    -GET请求 request.GET有值 request.POST无值 
+    -POST请求 request.POST有值 request.GET也可能有值 
+    -url中携带的参数在request.GET中
+
+5.模板引擎中的特殊标记
+    login.html中
+        {{name}}
+        {{users.0}} 列表的索引
+        {{users.1}}
+        {{user_dict.k1}} 取值字典
+        {{user_dict.k2}}
+        {% for row in user_list_dict %} 利用循环取字典 ,可以与html标签一起使用
+            <p>row.id</p>
+            <p>row.name</p>
+            <p>row.email</p>
+        {% endfor %}
+
+    def login(request):
+        return render(request,'xxx.html',{'name':'alex'}) 将name渲染成alex
+        return redirect('/index/') 跳转到自己网站中的某个网页，可以不写前缀
+        若templates下面还有目录，则在render中 要加目录名字/xxx.html
+
+        return render(
+            request,
+            'index/index.html',
+            {
+                'name':'alxe',
+                'users':['apple','lijie']
+                'user_dict':{'k1':'v1','k2':'v2'}
+                'user_list_dict':[
+                    {'id':1,'name':'alex','email':'aaa@a.com'},
+                    {'id':2,'name':'tom','email':'bbb@a.com'},
+                ]
+            }
+
+        )
+
+
+6.基于django + pymsql 实现登录
+
+    
