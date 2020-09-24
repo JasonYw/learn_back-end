@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ep3_django",
+            "type": "python",
+            "request": "launch",
+            "program": "D:\\py\\py_django\\ep3\\ep3_django",
+            "args": [
+                "manage.py runserver 127.0.0.1:8080"
+            ],
+            "django": true
+        }
+    ]
+}

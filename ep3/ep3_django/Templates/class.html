@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+    <head lang="en">
+        <meta charset="utf-8">
+        <title>classes</title>
+    </head>
+    
+    <body>
+        <h1>classes</h1>
+        <div>
+            <a href="/add_class/">add</a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>class</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for class in class_list %}
+                    <tr>
+                        <th>{{class.0}}</th>
+                        <th>{{class.1}}</th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
