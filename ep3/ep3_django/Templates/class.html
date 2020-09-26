@@ -14,13 +14,19 @@
                 <tr>
                     <th>ID</th>
                     <th>class</th>
+                    <th>operate</th>
                 </tr>
             </thead>
             <tbody>
                 {% for class in class_list %}
                     <tr>
-                        <th>{{class.0}}</th>
-                        <th>{{class.1}}</th>
+                        <td>{{class.0}}</td>
+                        <td>{{class.1}}</td>
+                        <td>
+                            <a href="/del_class/?nid={{class.0}}">delete</a>
+                            | 
+                            <a href="/edit_class/?nid={{class.0}}">edit</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

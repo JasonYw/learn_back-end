@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+    <head lang="en">
+        <meta charset="utf-8">
+        <title>eidt_class</title>
+    </head>
+    <body>
+        <h1>EDIT CLASS</h1>
+        <p>班级id:{{result.0}}</p>
+        <form action="/edit_class/?nid={{result.0}}" method="POST">
+            <p>新的班级名称:<input type="text" name="class_title" value="{{result.1}}"></p>
+            <input type="submit" value="替换">
+            <h3>{{error}}</h1>
+        </form>
+    </body>
+</html>

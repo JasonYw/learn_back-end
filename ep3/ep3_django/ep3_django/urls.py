@@ -18,6 +18,9 @@ from django.urls import path
 from app03 import views
 
 urlpatterns = [
+    path('',views.index_),
     path('class/', views.classes),
     path("add_class/",views.add_class),
+    path("del_class/",views.del_class),
+    path("edit_class/",views.edit_class),
 ]
