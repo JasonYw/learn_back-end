@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app03 import views
+from app03 import modal_views
+
 
 urlpatterns = [
     path('',views.index_),
@@ -31,4 +33,5 @@ urlpatterns = [
     path("add_student/",views.add_student),
     path("del_student/",views.del_student),
     path("edit_student/",views.edit_student),
+    path("modal_add_class/",modal_views.add_class),
 ]

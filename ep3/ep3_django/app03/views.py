@@ -93,14 +93,17 @@ def add_student(request):
         return render(request,"add_student.html",{'class_list':class_list})
     if request.method =="POST":
         class_id =request.POST.get("class_id")
-        student_name =request.POST.get("student_name")
-        student_id =sqlhelper.get_list('SELECT id FROM student ORDER BY id DESC LIMIT 1')
-        if student_id == []:
-            student_id = 1
+        if len(class_id) >0:
+            student_name =request.POST.get("student_name")
+            student_id =sqlhelper.get_list('SELECT id FROM student ORDER BY id DESC LIMIT 1')
+            if student_id == []:
+                student_id = 1
+            else:
+                student_id = student_id[0][0]+1
+            sqlhelper.modify('INSERT INTO student (id,name,class_id) VALUES (%s,%s,%s)',[student_id,student_name,class_id])
+            return redirect('/student/')
         else:
-            student_id = student_id[0][0]+1
-        sqlhelper.modify('INSERT INTO student (id,name,class_id) VALUES (%s,%s,%s)',[student_id,student_name,class_id])
-        return redirect('/student/')
+            return render(request,"add_student.html")
 
 def del_student(request):
     student_id = request.GET.get("nid")
@@ -133,3 +136,4 @@ def edit_student(request):
         else:
             return redirect('/edit_student/?nid='+student_id)
         
+

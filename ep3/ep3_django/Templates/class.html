@@ -2,12 +2,39 @@
     <head lang="en">
         <meta charset="utf-8">
         <title>classes</title>
+        <script src="https://g.csdnimg.cn/??lib/jquery/1.12.4/jquery.min.js,report/1.0.6/report.js"></script>
+        <style>
+            .hide{
+                display: none;
+            }
+            .shadow{
+                position: fixed;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                background-color: black;
+                opacity: 0.4;
+                z-index: 999;
+            }
+            .modal{
+                z-index: 1000;
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                height: 300px;
+                width: 400px;
+                margin-left: -200px;
+                margin-top: -150px;
+                background-color: blanchedalmond;
+            }
+        </style>
     </head>
-    
     <body>
         <h1>classes</h1>
         <div>
             <a href="/add_class/">add</a>
+            <button onclick="showModal()">对话框添加</button>
         </div>
         <table>
             <thead>
@@ -31,5 +58,52 @@
                 {% endfor %}
             </tbody>
         </table>
+        <a href="/">return</a>
     </body>
+    <!-- 表单提交无法完成不刷新页面提交 -->
+    <!-- <div id="shadow" class="shadow hide"></div>
+    <div id="modal" class="modal hide">
+        <form action="/modal_add_class/" method="POST">
+            <P>
+                <input type="text" name="title">
+            </P>
+            <input type="submit" value="提交">
+        </form>
+    </div> -->
+    <div id="shadow" class="shadow hide"></div>
+    <div id="modal" class="modal hide">
+            <P><input id ="title" type="text" name="title"></P>
+            <input type="submit" value="提交" onclick="AjaxSend();"><span id="error"></span>
+            <input type="button" value="cancle" onclick="cancleModal();">
+    </div>
+    <script>
+        function showModal(){
+            document.getElementById('shadow').classList.remove('hide')
+            document.getElementById('modal').classList.remove('hide')
+        }
+        function cancleModal(){
+            document.getElementById('shadow').classList.add('hide')
+            document.getElementById('modal').classList.add('hide')
+        }
+        function AjaxSend(){
+            $.ajax({
+                url:'/modal_add_class/',
+                type:'POST',
+                data:{
+                    'title':$('#title').val()
+                },
+                success:function(data){
+                    //当服务端处理完成后，返回数据时，该函数自动调用
+                    //data代表服务端返回的值
+                    //服务器先拿到值
+                    if (data =="ok"){
+                        location.href='/class/';
+                    }else{
+                        $('#error').text(data);
+                    }
+
+                }
+            })
+        }
+    </script>
 </html>
