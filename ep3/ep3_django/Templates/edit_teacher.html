@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+    <head lang="en">
+        <meta charset="utf-8">
+        <title>edit_teacher</title>
+    </head>
+    <body>
+        <h1>teacher id:{{teacher_id}}</h1>
+        <form action="/edit_teacher/?nid={{teacher_id}}" method="POST">
+            <p style="color: black;">teacher name:<input type="text" name="teacher_name" value="{{teacher_name}}"></p>
+            <input type="submit" value="提交">
+        </form>
+    </body>
+</html>

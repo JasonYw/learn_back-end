@@ -1,3 +1,4 @@
 SHOW DATABASES;
 USE django;
-SELECT id FROM class ORDER BY id DESC LIMIT 1
+SHOW TABLES;
+INSERT INTO teacHer (id,name) VALUES (1,'tom')

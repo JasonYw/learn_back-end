@@ -3,7 +3,12 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 def index_(request):
-    return redirect('/class/')
+    if request.GET.get("href") =='class':
+        return redirect('/class/')
+    elif request.GET.get("href") == 'teacher':
+        return redirect('/teacher/')
+    else:
+        return render(request,'index.html')
 
 def classes(request):
     connect =mysql.connector.connect(user="root",password="0125",database="django")
@@ -60,3 +65,54 @@ def edit_class(request):
         connect.close()
         return redirect('/class/')
  
+def teacher(request):
+    connect =mysql.connector.connect(user="root",password="0125",database="django")
+    cursor =connect.cursor()
+    cursor.execute('SELECT * FROM teacher')
+    teacher_list =cursor.fetchall()
+    connect.close()
+    return render(request,'teacher.html',{'teacher_list':teacher_list})
+
+def add_teacher(request):
+    if request.method =="GET":
+        return render(request,'add_teacher.html')
+    if request.method =="POST":
+        teacher_name =request.POST.get("teacher_name")
+        connect =mysql.connector.connect(user="root",password="0125",database="django")
+        cursor =connect.cursor()
+        cursor.execute('SELECT id FROM teacher ORDER BY id DESC LIMIT 1')
+        teacher_id =cursor.fetchall()
+        if teacher_id ==[]:
+            teacher_id =1
+        else:
+            teacher_id =teacher_id[0][0] +1
+        cursor.execute("INSERT INTO teacher (id,name) VALUES (%s,%s)",[teacher_id,teacher_name])
+        connect.commit()
+        connect.close()
+        return redirect('/teacher/')
+
+def del_teacher(request):
+    teacher_id =request.GET.get('nid')
+    connect =mysql.connector.connect(user="root",password="0125",database="django")
+    cursor =connect.cursor()
+    cursor.execute('DELETE FROM teacher WHERE id=%s',[teacher_id,])
+    connect.commit()
+    connect.close()
+    return redirect('/teacher/')
+
+def edit_teacher(request):
+    connect =mysql.connector.connect(user="root",password="0125",database="django")
+    cursor =connect.cursor()
+    if request.method =='GET':
+        teacher_id =request.GET.get("nid")
+        cursor.execute('SELECT * FROM teacher WHERE id =%s LIMIT 1',[teacher_id])
+        teacher_name =cursor.fetchall()
+        connect.close()
+        return render(request,'edit_teacher.html',{'teacher_id':teacher_id,'teacher_name':teacher_name[0][1]})
+    if request.method == 'POST':
+        teacher_id =request.GET.get("nid")
+        teacher_name =request.POST.get("teacher_name")
+        cursor.execute('UPDATE teacher SET name=%s WHERE id =%s',[teacher_name,teacher_id])
+        connect.commit()
+        connect.close()
+        return redirect('/teacher/')

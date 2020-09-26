@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+    <head lang="en">
+        <meta charset="utf-8">
+        <title>teacher</title>
+    </head>
+    <body>
+        <h1>teacher</h1>
+        <h3><a href="/add_teacher/" style="color:black">add</a></h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>operate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in teacher_list %}
+                    <tr>
+                        <th>{{item.0}}</th>
+                        <th>{{item.1}}</th>
+                        <th>
+                            <a href="/del_teacher/?nid={{item.0}}" style="color: black;">delete</a>|
+                            <a href="/edit_teacher/?nid={{item.0}}" style="color: black;">edit</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
