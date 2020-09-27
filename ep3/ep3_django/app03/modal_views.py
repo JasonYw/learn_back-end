@@ -5,6 +5,14 @@ from utils import sqlhelper
 import time
 
 def add_class(request):
+    '''
+    页面不刷新,提示错误信息
+    若用form表单提交，这个功能无法完成
+    form表单提交，页面必刷新
+    若想完成此功能并且是对话框的方式就不能用form表单提交
+    若用ajex提交，提交后无法用renturn 进行跳转，只能通过写js进行跳转
+    在js中使用location.href完成跳转
+    '''
     class_name =request.POST.get('title')
     if len(class_name) >0:
         class_num =sqlhelper.get_list('SELECT id FROM class ORDER BY id DESC LIMIT 1')
@@ -17,11 +25,9 @@ def add_class(request):
     else:
         return HttpResponse('班级不能为空')
 
-    '''
-    页面不刷新,提示错误信息
-    若用form表单提交，这个功能无法完成
-    form表单提交，页面必刷新
-    若想完成此功能并且是对话框的方式就不能用form表单提交
-    若用ajex提交，提交后无法用renturn 进行跳转，只能通过写js进行跳转
-    在js中使用location.href完成跳转
-    '''
+def del_class(request):
+    class_id =request.POST.get("class_id")
+    if sqlhelper.modify('DELETE FROM class WHERE id =%s',[class_id,]):
+        return HttpResponse('200')
+    else:
+        return HttpResponse('404')

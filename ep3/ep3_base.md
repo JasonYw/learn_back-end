@@ -61,9 +61,39 @@
             -添加
                 FROM 表单提交，页面会刷新
     AJAX
+        -引入jquery
+        -$.ajax({
+            url:'要提交的地址'，
+            type:'POST',//GET或者POST，提交的方式
+            data:{'k1':'v1','k2':'v2'},//提交的数据
+            success:function(data){
+                //当前服务端处理完毕之后，自动执行的回调函数
+                //data为返回的数据
+                //使用ajax提交，后端return redirct、render 都无法完成页面跳转操作，需要使用Location.href操作
+                Location.href="要跳转的地址"
+            }
+        })
 
-
-
+        其他：
+            1.模板语言if条件语句
+            2.FORM表单提交，页面会刷新
+            3.AJAX提交页面不刷新
+            4.js实现页面跳转：
+                location.href ="要跳转的地址"
+            5.
+                模态对话框一般都用 ajax进行绑定
+                    -少量输入框，下拉框
+                    -数据少
+                    登录
+                新url方式
+                    -数据大操作多 
+                    -对于大量的数据以及操作是适用的
+                    
+        作业：
+            1.班级：
+                Ajax删除
+                Ajax编辑
+            一对多的对话框实现
 学员管理：
     表：
         班级表(day 1)
