@@ -77,16 +77,16 @@
     </div> -->
     <div id="shadow" class="shadow hide"></div>
     <div id="modal" class="modal hide">
-        <P><input id ="title" type="text" name="title"></P>
-        <input type="submit" value="提交" onclick="AjaxSend();"><span id="error"></span>
+        <p style="margin-left: 10px;">添加班级名称：<input id ="title" type="text" name="title"></p>
+        <input type="submit" value="提交" onclick="AjaxSend();" style="margin-left: 10px;"><span id="error"></span>
         <input type="button" value="cancle" name="add_class" onclick="cancleModal(this);">
     </div>
     <div id="shadow-edit" class="shadow hide"></div>
     <div id="modal-edit" class="modal hide">
-        class id:<span id="s_c_id"></span>
+        <span style="margin-left: 10px;">class id:<span id="s_c_id"></span></span>
         class name:<span id="s_c_name"></span></br>
-        新的班级名称：<input type="text" name="title" id="class_input" ></br>
-        <input type="button" value="submit" onclick="edit_send();">
+        <span style="margin-left: 10px;">新的班级名称：<input type="text" name="title" id="class_input" ></span></br>
+        <span style="margin-left: 10px;"><input type="button" value="submit" onclick="edit_send();"></span>
         <input type="button" value="cancle" name="edit_class"onclick="cancleModal(this);">
     </div>
     <script>
