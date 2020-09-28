@@ -94,6 +94,136 @@
                 Ajax删除
                 Ajax编辑
             一对多的对话框实现
+
+
+内容回顾
+    1.web框架的本质
+        浏览器（socket客户端）
+            2.发送IP和端口 http://www.baidu.com:80/index/
+                GET：
+                    请求头
+                        http1.1 /index/
+                        。。。
+
+                    请求体(无内容)
+                
+                POST：
+                    请求头
+                        http1.1 /index?p=123
+                        ...
+                    请求体
+                        ...
+
+        服务端（socket服务端）
+            1.服务端启动并监听ip和端口，等待用户连接
+            3.接收处理，并返回
+                普通返回：
+                    响应头：
+                        access-control-allow-origin: *
+                        cache-control: max-age=14400
+                        content-type: application/javascript; charset=utf-8
+                        date: Mon, 28 Sep 2020 15:10:33 GMT
+                        etag: W/"5f2c2f77-54fd"
+                        expires: Mon, 28 Sep 2020 03:12:26 GMT
+                        last-modified: Thu, 06 Aug 2020 16:27:35 GMT
+                        server: cloudflare
+                        status: 200
+                        vary: Accept-Encoding
+                    响应体
+                        html文件
+            4.接受响应
+                普通响应：页面直接显示 一次http请求
+                重定向响应：再发起一次http请求
+
+            
+            重定向返回：（只有响应头，但是会多一个location）全是浏览器做的，服务端只做了返回
+                响应头：
+                    loacation：
+                    access-control-allow-origin: *
+                    cache-control: max-age=14400
+                    content-type: application/javascript; charset=utf-8
+                    date: Mon, 28 Sep 2020 15:10:33 GMT
+                    etag: W/"5f2c2f77-54fd"
+                    expires: Mon, 28 Sep 2020 03:12:26 GMT
+                    last-modified: Thu, 06 Aug 2020 16:27:35 GMT
+                    server: cloudflare
+                    status: 200
+                    vary: Accept-Encoding
+            
+                
+
+    2.django的web框架
+        a.创建project
+            django-admin startproject mysite
+
+        b.配置
+            模板
+            静态文件 加逗号
+            csrf注释掉
+        
+        c.路由关系
+            url -> 函数
+        
+        d.视图函数
+
+            def index(request):
+                request.method
+                request.GET
+                request.POST
+                return HttpResponse(字符串内容)
+                return render(request,'x.html(模板路径)',{}(模板渲染)) -> 本质 HttpResponse
+                    #1.获取模板+数据，渲染
+                    #2.HttpResponse()
+                return redirect('url')
+
+        e.模板渲染
+            {{k1}}
+
+            字典、list都是.
+            {{k1.0}}
+            {{k1.1}}
+
+            {% for i in list %}
+                {{i}}
+            {% endfor %}
+
+            {%if 1>2 %}
+
+            {% endif %}
+
+        
+    3.Ajax
+        不是django特有的，是一个单独的前端技术
+        AJAX(jquery)
+
+            $.ajax({
+                url:'',
+                type:'GET',
+                data:'{k1:'v1'}',
+                success:function(data){
+                    //data 为请求ajax请求成功后，服务器的返回值，对于django来说 只能用return HttpResponse() 返回字符串
+                    //data本质为字符串
+                }
+            })
+
+    4.html 
+        -若html中a标签内如果既有href 又有onclik 则优先执行onclick，执行后继续跳转到href
+        -若不想让a标签中的href执行，只想执行完onclick之后停止则
+            <a href="www.baidu.com" onclick="return example();"></a>
+            <script>
+                function example(){
+                    //return false,则a标签执行完onclick中的example后，不会跳转到href
+                    //相反若想让其跳转，return true即可
+=
+                    return false
+                }
+            </script>
+
+        阻止默认事件的发生
+            
+
+
+
 学员管理：
     表：
         班级表(day 1)
@@ -113,6 +243,15 @@
 
         3个角色4张表
 
+今日内容：
+    1.对话框
+        单表
+        一对多
+    2.多对多
+
+    3.Bootstrap 样式
+
+    4.fontawesome 图标
 
     单表操作：
         -增
@@ -134,3 +273,4 @@
 
 Django基础
 前端知识
+

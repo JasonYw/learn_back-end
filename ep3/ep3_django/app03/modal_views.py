@@ -45,10 +45,7 @@ def edit_class(request):
             return HttpResponse('ERROR')
         sqlhelper.modify('UPDATE class SET title=%s WHERE id=%s;',[new_classname,class_id,])
         return HttpResponse('200')
-        # if  sqlhelper.modify('UPDATE class SET title=%s WHERE id=%s;',[new_classname,class_id,]):
-        #     return HttpResponse('200')
-        # else:
-        #     return HttpResponse('ERROR')
+
 
 
 
