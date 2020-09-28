@@ -52,11 +52,12 @@
                         <td>{{class.1}}</td>
                         <td>
                             <a href="/del_class/?nid={{class.0}}">delete</a>
-                            | 
+                            
                             <a href="/edit_class/?nid={{class.0}}">edit</a>
                         </td>
                         <td>
                             |<button value="{{class.0}}" onclick="AjaxDelete(this);">delete_</button>
+                            |<button value="{{class.0}}" onclick="AjaxEdit(this);">edit</button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -76,9 +77,15 @@
     </div> -->
     <div id="shadow" class="shadow hide"></div>
     <div id="modal" class="modal hide">
-            <P><input id ="title" type="text" name="title"></P>
-            <input type="submit" value="提交" onclick="AjaxSend();"><span id="error"></span>
-            <input type="button" value="cancle" onclick="cancleModal();">
+        <P><input id ="title" type="text" name="title"></P>
+        <input type="submit" value="提交" onclick="AjaxSend();"><span id="error"></span>
+        <input type="button" value="cancle" onclick="cancleModal();">
+    </div>
+    <div id="shadow-edit" class="shadow hide"></div>
+    <div id="modal-edit" class="modal hide">
+        <span><span>
+        <input type="text" name="" id="" ><span id=""></span>
+        <input type="button" value="" name="" id="" onclick="">
     </div>
     <script>
         function showModal(){
@@ -123,6 +130,27 @@
                     }else{
                         alert('error delete class id :'+class_id)
                     }
+                }
+            })
+        }
+        function AjaxEdit(obj){
+            var class_id =obj.getAttribute("value")
+            $.ajax({
+                url:'/modal_edit_class/',
+                type:'GET',
+                data:{
+                    'nid':class_id
+                },
+                success:function(data){
+                    if (data !=''){
+                        document.getElementById('shadow-edit').classList.remove('hide')
+                        document.getElementById('modal-edit').classList.remove('hide')
+                        $('#modal-edit').children('span').text('class id:'+class_id+' class name: '+data)
+                        window.location('/class/')
+                    }else{
+                        alert('error edit id of class:'+class_id)
+                    }
+
                 }
             })
         }

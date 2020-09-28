@@ -15,19 +15,30 @@ def add_class(request):
     '''
     class_name =request.POST.get('title')
     if len(class_name) >0:
-        class_num =sqlhelper.get_list('SELECT id FROM class ORDER BY id DESC LIMIT 1')
+        class_num =sqlhelper.get_list('SELECT id FROM class ORDER BY id DESC LIMIT 1;')
         if class_num ==[]:
             class_id =1
         else:
             class_id =class_num[0][0]+1
-        sqlhelper.modify('INSERT IGNORE INTO class (id,title) VALUES (%s,%s)',[class_id,class_name,])
+        sqlhelper.modify('INSERT IGNORE INTO class (id,title) VALUES (%s,%s);',[class_id,class_name,])
         return HttpResponse('ok')
     else:
         return HttpResponse('班级不能为空')
 
 def del_class(request):
     class_id =request.POST.get("class_id")
-    if sqlhelper.modify('DELETE FROM class WHERE id =%s',[class_id,]):
+    if sqlhelper.modify('DELETE FROM class WHERE id =%s;',[class_id,]):
         return HttpResponse('200')
     else:
         return HttpResponse('404')
+    
+def edit_class(request):
+    if request.method == "GET":
+        class_id =request.GET.get("nid")
+        print(class_id)
+        class_name =sqlhelper.get_list('SELECT title FROM class WHERE id =%s LIMIT 1;',[class_id,])[0][0]
+        return HttpResponse(class_name)
+    if request.method == "POST":
+        pass
+
+

@@ -1,3 +1,0 @@
-SHOW DATABASES;
-USE django;
-SHOW TABLES;
