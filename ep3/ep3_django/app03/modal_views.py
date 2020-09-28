@@ -35,10 +35,20 @@ def del_class(request):
 def edit_class(request):
     if request.method == "GET":
         class_id =request.GET.get("nid")
-        print(class_id)
         class_name =sqlhelper.get_list('SELECT title FROM class WHERE id =%s LIMIT 1;',[class_id,])[0][0]
         return HttpResponse(class_name)
     if request.method == "POST":
-        pass
+        print(request.POST)
+        class_id =request.POST.get('class_id')
+        new_classname =request.POST.get("new_c_name")
+        if new_classname == '':
+            return HttpResponse('ERROR')
+        sqlhelper.modify('UPDATE class SET title=%s WHERE id=%s;',[new_classname,class_id,])
+        return HttpResponse('200')
+        # if  sqlhelper.modify('UPDATE class SET title=%s WHERE id=%s;',[new_classname,class_id,]):
+        #     return HttpResponse('200')
+        # else:
+        #     return HttpResponse('ERROR')
+
 
 

@@ -22,7 +22,7 @@
                 position: fixed;
                 left: 50%;
                 top: 50%;
-                height: 300px;
+                height: 100px;
                 width: 400px;
                 margin-left: -200px;
                 margin-top: -150px;
@@ -79,22 +79,29 @@
     <div id="modal" class="modal hide">
         <P><input id ="title" type="text" name="title"></P>
         <input type="submit" value="提交" onclick="AjaxSend();"><span id="error"></span>
-        <input type="button" value="cancle" onclick="cancleModal();">
+        <input type="button" value="cancle" name="add_class" onclick="cancleModal(this);">
     </div>
     <div id="shadow-edit" class="shadow hide"></div>
     <div id="modal-edit" class="modal hide">
-        <span><span>
-        <input type="text" name="" id="" ><span id=""></span>
-        <input type="button" value="" name="" id="" onclick="">
+        class id:<span id="s_c_id"></span>
+        class name:<span id="s_c_name"></span></br>
+        新的班级名称：<input type="text" name="title" id="class_input" ></br>
+        <input type="button" value="submit" onclick="edit_send();">
+        <input type="button" value="cancle" name="edit_class"onclick="cancleModal(this);">
     </div>
     <script>
         function showModal(){
             document.getElementById('shadow').classList.remove('hide')
             document.getElementById('modal').classList.remove('hide')
         }
-        function cancleModal(){
-            document.getElementById('shadow').classList.add('hide')
-            document.getElementById('modal').classList.add('hide')
+        function cancleModal(obj){
+            if (obj.getAttribute("name") == "add_class"){
+                document.getElementById('shadow').classList.add('hide')
+                document.getElementById('modal').classList.add('hide')
+            }else{
+                document.getElementById("shadow-edit").classList.add('hide')
+                document.getElementById('modal-edit').classList.add('hide')
+            }
         }
         function AjaxSend(){
             $.ajax({
@@ -145,12 +152,31 @@
                     if (data !=''){
                         document.getElementById('shadow-edit').classList.remove('hide')
                         document.getElementById('modal-edit').classList.remove('hide')
-                        $('#modal-edit').children('span').text('class id:'+class_id+' class name: '+data)
-                        window.location('/class/')
+                        $('#s_c_id').text(class_id)
+                        $('#s_c_name').text(data)
                     }else{
                         alert('error edit id of class:'+class_id)
                     }
 
+                }
+            })
+        }
+        function edit_send(){
+            var class_id =$('#s_c_id').text();
+            var new_classname =$('#class_input').val();
+            $.ajax({
+                url:'/modal_edit_class/',
+                type:'POST',
+                data:{
+                    'class_id':class_id,
+                    'new_c_name':new_classname,
+                },
+                success:function(data){
+                    if(data != 'ERROR'){
+                        location.href ='/class/'
+                    }else{
+                        alert('error edit for class:'+class_id)
+                    }
                 }
             })
         }
