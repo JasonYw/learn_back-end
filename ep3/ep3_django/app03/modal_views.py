@@ -3,6 +3,7 @@ from django.shortcuts import HttpResponse
 from django.shortcuts import render
 from utils import sqlhelper
 import time
+import json
 
 def add_class(request):
     '''
@@ -45,6 +46,32 @@ def edit_class(request):
             return HttpResponse('ERROR')
         sqlhelper.modify('UPDATE class SET title=%s WHERE id=%s;',[new_classname,class_id,])
         return HttpResponse('200')
+
+def add_student(request):
+    ret ={
+        'status':True,
+        'message':None,
+    }
+    name =request.POST.get("name")
+    class_name =request.POST.get("class")
+    if name =='':
+        ret['status'] =False
+        ret['message'] ='None type'
+        return HttpResponse(json.dumps(ret))
+    stu_num =sqlhelper.get_list('SELECT id FROM student ORDER BY id DESC LIMIT 1;')
+    if stu_num ==[]:
+        stu_num =1
+    else:
+        stu_num =stu_num[0][0] +1
+    try:
+        class_id =sqlhelper.get_list('SELECT id FROM class WHERE title=%s LIMIT 1;',[class_name])[0][0]
+        sqlhelper.modify('INSERT INTO student (id,name,class_id) VALUES (%s,%s,%s);',[stu_num,name,class_id,])
+    except Exception as e:
+        ret['status'] =False
+        ret['message'] =str(e)
+    return HttpResponse(json.dumps(ret))
+
+
 
 
 

@@ -11,7 +11,7 @@
     <body>
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
-                <button type="button" class="btn btn-default navbar-btn" value="studnet" onclick="to_(this);">TABLE student</button>
+                <button type="button" class="btn btn-default navbar-btn" value="student" onclick="to_(this);">TABLE student</button>
                 <button type="button" class="btn btn-default navbar-btn" value="teacher" onclick="to_(this);">TABLE teacher</button>
                 <button type="button" class="btn btn-default navbar-btn" value="class" onclick="to_(this);">TABLE class</button>
             </div>
@@ -19,7 +19,7 @@
     </body>
     <script>
         function to_(obj){
-            var target =obj.getAttribute("value") =="student"
+            var target =obj.getAttribute("value")
             if(target =="student"){
                 location.href="/?href=student"
             }else if(target =="teacher"){

@@ -219,7 +219,26 @@
                 }
             </script>
 
-        阻止默认事件的发生
+    单表
+        添加
+        编辑
+        删除
+
+        a.阻止默认事件的发生
+        b.location.reload()
+        c.HttpResponse(json.dumps())
+        d.json.parse()
+    
+    一对多
+        students
+        jquery绑定的事件 也可以阻止事件发生，在方法中return false即可
+        $(function(){
+            //当页面加载完成之后自动执行
+            //也可以阻止事件发生
+            $('#add_modal').click(function(){
+                return false
+            })
+        })
             
 
 
