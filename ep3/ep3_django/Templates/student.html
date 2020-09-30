@@ -47,6 +47,7 @@
                     <th>NAME</th>
                     <th>CLASS</th>
                     <th>operate</th>
+                    <th>operate_</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,6 +59,9 @@
                         <td>
                             <a href="/del_student/?nid={{student.0}}"  style="color: black;">delete</a>| 
                             <a href="/edit_student/?nid={{student.0}}" style="color: black;">edit</a>
+                        </td>
+                        <td>
+                            <button id="start-edit" value="{{student}}">edit</button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -76,6 +80,20 @@
                 {% endfor %}
            </select>
         <p><input type="submit" value="提交" id="Ajax_addstu"><button id="cancle">cancle</button></p>
+    </div>
+
+    <div id="edit-shadow" class="shadow hide"></div>
+    <div id="edit-modal" class="add-modal hide">
+        id: <span></span></br>
+        姓名：<input id="edit-name" type="text"></br>
+        班级：<select name="classid" id="edit-option">
+            {% for class in class_list %}
+            <option>{{class.1}}</option>
+            {% endfor %}
+        </select></br>
+        <input type="submit" id="Ajax-edit">
+        <input id="edit-cancle" type="submit" value="cancle">
+
     </div>
 
     <script>
@@ -106,6 +124,18 @@
 
         $('#cancle').click(function(){
             $('#shadow,#add-modal').addClass('hide')
+        })
+        $('#start-edit').click(function(){
+            $('#edit-shadow,#edit-modal').removeClass("hide")
+            var student =$(this).val().split(",")
+            // var content =student[0].replace("(","")
+            // $('#edit-modal').children('span').text(content)
+            // $("#edit-name").val(student[1].replace("'","").replace("'","").replace(" ",""))
+            // $("edit-option").val(student[2])
+            alert(student)
+        })
+        $('#edit-cancle').click(function(){
+            $('#edit-shadow,#edit-modal').addClass('hide')
         })
     </script>
 </html>

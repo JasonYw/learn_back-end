@@ -83,7 +83,7 @@ def edit_teacher(request):
         return redirect('/teacher/')
 
 def student(request):
-    student_list =sqlhelper.get_list('SELECT s.id,s.name,c.title class FROM student s LEFT OUTER JOIN class c ON s.class_id =c.id;')
+    student_list =sqlhelper.get_list('SELECT s.id,s.name,c.title class,c.id FROM student s LEFT OUTER JOIN class c ON s.class_id =c.id;')
     class_list =sqlhelper.get_list('SELECT * FROM class;')
     return render(request,"student.html",{'student_list':student_list,'class_list':class_list,})
 
