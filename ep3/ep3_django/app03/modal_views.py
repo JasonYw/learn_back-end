@@ -7,6 +7,7 @@ import json
 
 def add_class(request):
     '''
+    test
     页面不刷新,提示错误信息
     若用form表单提交，这个功能无法完成
     form表单提交，页面必刷新
