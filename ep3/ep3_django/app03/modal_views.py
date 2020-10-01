@@ -104,3 +104,72 @@ def del_student(request):
             ret['status'] =False
             ret['message'] ='sql error'
             return HttpResponse(json.dumps(ret))
+
+def add_teacher(request):
+    if request.method =="POST":
+        ret={
+            'status':True,
+            'message':None
+        }
+        new_teacher =request.POST.get("title")
+        class_list =request.POST.getlist("class_list[]")
+        if ( new_teacher == "" or class_list ==None):
+            ret['status'] =False
+            ret['message'] ='empty data'
+            return HttpResponse(json.dumps(ret))
+        sql=sqlhelper.SqlHelper()
+        teacher_id =sql.get_list("SELECT id FROM teacher ORDER BY id DESC LIMIT 1")
+        if teacher_id ==[]:
+            teacher_id =1
+        else:
+            teacher_id =teacher_id[0][0] +1 
+        sql.modify('INSERT INTO teacher (id,name) VALUES (%s,%s)',[teacher_id,new_teacher])
+        num =sql.get_list("SELECT id FROM link_t_C ORDER BY id DESC LIMIT 1")
+        if num ==[]:
+            num =1
+        else:
+            num =num[0][0] +1 
+        for i in class_list:
+            sql.modify('INSERT INTO link_t_C (id,teacher_id,class_id) VALUES (%s,%s,%s)',[num,teacher_id,int(i)])
+            num =num+1
+        return HttpResponse(json.dumps(ret))
+
+def del_teacher(request):
+    ret={
+        'status':True,
+        'message':None
+    }
+    teacher_id =request.GET.get("teacher_id")
+    sql =sqlhelper.SqlHelper()
+    sql.modify('DELETE FROM teacher WHERE id=%s',[teacher_id])
+    sql.modify('DELETE FROM link_t_C WHERE teacher_id=%s',[teacher_id])
+    sql.close()
+    return HttpResponse(json.dumps(ret))
+
+def edit_teacher(request):
+    ret={
+        'status':True,
+        'message':None
+    }
+    teacher_id =request.POST.get("teacher_id")
+    teacher_name =request.POST.get("teacher_name")
+    classid_list =request.POST.getlist("class_list[]")
+    if (teacher_name =="" or classid_list ==[]):
+        ret={
+            'status':False,
+            'message':"empty message"
+        }
+        return HttpResponse(json.dumps(ret))
+    sql =sqlhelper.SqlHelper()
+    sql.modify("UPDATE teacher SET name=%s WHERE id=%s",[teacher_name,teacher_id])
+    sql.modify("DELETE FROM link_t_C WHERE teacher_id=%s",[teacher_id,])
+    num =sql.get_list("SELECT id FROM link_t_C ORDER BY id DESC LIMIT 1")
+    if num ==[]:
+        num =1
+    else:
+        num =num[0][0]+1
+    for class_id in classid_list:
+        sql.modify("INSERT INTO link_t_C (id,teacher_id,class_id) VALUES (%s,%s,%s)",[num,teacher_id,class_id])
+        num =num+1
+    sql.close()
+    return HttpResponse(json.dumps(ret))

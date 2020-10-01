@@ -55,6 +55,7 @@ def teacher(request):
             LEFT JOIN link_t_C l ON t.id =l.teacher_id
             LEFT JOIN class c ON l.class_id =c.id;''',[]
         )
+    class_list =sqlhelper.get_list('SELECT * FROM class')
     dict_ ={}
     for key in teacher_list:
         if dict_.get(key[1]) ==None:
@@ -65,7 +66,7 @@ def teacher(request):
             }
         else:
             dict_[key[1]]['titles'].append(key[4])
-    return render(request,'teacher.html',{'teacher_list':dict_.values()})
+    return render(request,'teacher.html',{'teacher_list':dict_.values(),'class_list':class_list})
 
 def add_teacher(request):
     if request.method =="GET":
@@ -101,13 +102,39 @@ def del_teacher(request):
 
 def edit_teacher(request):
     if request.method =='GET':
+        sql =sqlhelper.SqlHelper()
         teacher_id =request.GET.get("nid")
-        teacher_name =sqlhelper.get_list('SELECT * FROM teacher WHERE id =%s LIMIT 1;',[teacher_id])
-        return render(request,'edit_teacher.html',{'teacher_id':teacher_id,'teacher_name':teacher_name[0][1]})
+        teacher =sql.get_list('SELECT * FROM teacher WHERE id =%s LIMIT 1;',[teacher_id])
+        class_id =sql.get_list('SELECT * FROM link_t_C WHERE teacher_id =%s;',[teacher_id,])
+        class_list =sql.get_list('SELECT * FROM class;')
+        class_data=[]
+        for cid in class_id:
+            print(cid)
+            class_data.append(sql.get_list('SELECT * FROM class WHERE id=%s LIMIT 1',[cid[2],]))
+        sql.close()
+        return render(request,'edit_teacher.html',{'teacher_id':teacher_id,'teacher_name':teacher[0][1],'class_data':class_data,'class_list':class_list,})
+        # 1 [(1, 'tony2')] [[(1, 'class_1')], [(2, 'class_2')]]
     if request.method == 'POST':
         teacher_id =request.GET.get("nid")
         teacher_name =request.POST.get("teacher_name")
-        sqlhelper.modify('UPDATE teacher SET name=%s WHERE id =%s;',[teacher_name,teacher_id])
+        class_selected =request.POST.getlist('class_list')
+        if (teacher_name == "" or  class_selected==[]):
+            return redirect('/teacher/')
+        print(class_selected)
+        sql =sqlhelper.SqlHelper()
+        link_id =sql.get_list('SELECT id FROM link_t_C WHERE teacher_id=%s',[teacher_id,])
+        print(link_id)
+        sql.modify('UPDATE teacher SET name=%s WHERE id=%s',[teacher_name,teacher_id,])
+        sql.modify('DELETE FROM link_t_C WHERE teacher_id=%s',[teacher_id,])
+        num =sql.get_list("SELECT id FROM link_t_C ORDER BY id DESC LIMIT 1")
+        if num ==[]:
+            num =1
+        else:
+            num =num[0][0]+1
+        for i in class_selected:
+            sql.modify('INSERT link_t_C (id,teacher_id,class_id) VALUES (%s,%s,%s)',[num,teacher_id,int(i)])
+            num =num+1
+        sql.close()
         return redirect('/teacher/')
 
 def student(request):

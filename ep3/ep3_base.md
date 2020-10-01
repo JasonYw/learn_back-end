@@ -242,7 +242,62 @@
     
     多对多
 
-            
+内容回顾：
+    1.Http请求的生命周期
+        请求头 -> 提取url ->路由关系匹配 -> 函数（模板加数据渲染）->返回用户（响应头+响应体）
+    2.def index(request):
+        request.method
+        request.POST
+        request.GET
+        return Httpresponse
+        return render
+        return redirect
+    3.
+        {% for i in list%}
+        {% endfor %}
+        {% if %}
+        {% endif %}
+        索引.
+        {{}}
+    
+    4.
+        <html>
+            <head>
+            </head>
+            <body>
+                <script>
+                    alert({{k1}})
+                </script>
+            </body>
+        </html>
+        render渲染工作本质就是替换，所以{{k1}}不管在哪都会替换 
+        后端传递给{{k1}}为字符串，则alert({{k1}}) 会把其当成变量，会报错，
+        所以避免报错，要alert('{{k1}}')
+        alert() 出现的值为 后端给k1传递的值，而不是{{k1}}
+        游览器拿到的页面是已经渲染后的结果
+    
+    5.js序列化
+        阻止默认事件发生
+            <a onclick="return func()">
+            <script>
+                func(){
+                    return false
+                }
+            </script>
+            jquery,绑定的事件直接在func中return false即可
+    
+    6.ajax
+        $.ajax({
+            url:'',
+            type:'',
+            data:{
+
+            },
+            dataType:'JSON',
+            success:func(data){
+                data=JSON.parse()  /转换成json
+            }
+        })
 
 
 
@@ -270,10 +325,24 @@
         单表
         一对多
     2.多对多
+        -新url方式
+            -增加
+            -编辑
+        -对话框
+            -增加
+            -编辑
+            
 
     3.Bootstrap 样式
 
     4.fontawesome 图标
+
+
+今日内容：
+    -美化页面
+    -用户登录
+
+
 
     单表操作：
         -增
@@ -304,7 +373,11 @@
         已经教过的班级
         未教的班级
         左右移动
-
+作业内容
+    后台管理页面
+    用户登录操作
+    学院管理功能
+    
 
 Django基础
 前端知识

@@ -2,12 +2,25 @@
     <head lang="en">
         <meta charset="utf-8">
         <title>edit_teacher</title>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     </head>
     <body>
         <h1>teacher id:{{teacher_id}}</h1>
         <form action="/edit_teacher/?nid={{teacher_id}}" method="POST">
             <p style="color: black;">teacher name:<input type="text" name="teacher_name" value="{{teacher_name}}"></p>
+            <select name="class_list" multiple="multiple" size="6">
+                {% for class in  class_list%}
+                    <option value="{{class.0}}">{{class.1}}</option>
+                {% endfor %}
+            </select>
             <input type="submit" value="提交">
+            <a href="/teacher/">cancle</a>
+            {{error}}
         </form>
     </body>
+    <script>
+        {% for class in class_data %}
+            $('select option[value={{class.0.0}}]').attr("selected","true")
+        {% endfor %}
+    </script>
 </html>
