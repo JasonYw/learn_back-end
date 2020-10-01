@@ -239,6 +239,9 @@
                 return false
             })
         })
+    
+    多对多
+
             
 
 
@@ -246,11 +249,11 @@
 学员管理：
     表：
         班级表(day 1)
-        id title 
+            id title 
         学生
-        id name class_id(FK)
+            id name class_id(FK)
         老师表(day 1)
-        id name
+            id name
 
         老师的表需要和班级建立关系
         一个老师可以教多个班级
@@ -258,7 +261,7 @@
         多 对 多
 
         创建关系表
-        id teacher_id class_id 
+            id teacher_id class_id 
 
         3个角色4张表
 
@@ -288,6 +291,19 @@
         -改
         -查
 
+作业内容
+    -老师表
+    -添加按钮
+        -任教老师
+        -班级 下拉框 多选
+        -班级id 老师id
+        老师表里加老师
+        关系表里加id
+        getlist
+    -select 框
+        已经教过的班级
+        未教的班级
+        左右移动
 
 
 Django基础

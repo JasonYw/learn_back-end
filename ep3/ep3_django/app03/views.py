@@ -26,7 +26,7 @@ def add_class(request):
             class_id =1
         else:
             class_id =class_num[0][0]+1
-        print(sqlhelper.modify('INSERT IGNORE INTO class (id,title) VALUES (%s,%s);',[class_id,class_name,]))
+        sqlhelper.modify('INSERT IGNORE INTO class (id,title) VALUES (%s,%s);',[class_id,class_name,])
         return redirect('/class/')
 
 def del_class(request):
@@ -50,24 +50,52 @@ def edit_class(request):
         return redirect('/class/')
  
 def teacher(request):
-    teacher_list =sqlhelper.get_list('SELECT * FROM teacher;')
-    return render(request,'teacher.html',{'teacher_list':teacher_list})
+    teacher_list =sqlhelper.get_list('''
+            SELECT  l.id,t.id teacher_id,t.name,c.id class_id,c.title FROM teacher t
+            LEFT JOIN link_t_C l ON t.id =l.teacher_id
+            LEFT JOIN class c ON l.class_id =c.id;''',[]
+        )
+    dict_ ={}
+    for key in teacher_list:
+        if dict_.get(key[1]) ==None:
+            dict_[key[1]] ={
+                'name':key[2],
+                'titles':[key[4],],
+                'teacher_id':key[1]
+            }
+        else:
+            dict_[key[1]]['titles'].append(key[4])
+    return render(request,'teacher.html',{'teacher_list':dict_.values()})
 
 def add_teacher(request):
     if request.method =="GET":
-        return render(request,'add_teacher.html')
+        class_list =sqlhelper.get_list("SELECT * FROM class")
+        return render(request,'add_teacher.html',{"class_list":class_list})
     if request.method =="POST":
         teacher_name =request.POST.get("teacher_name")
+        class_list =request.POST.getlist("class_list")
+        if teacher_name =="":
+            class_list =sqlhelper.get_list("SELECT * FROM class")
+            return render(request,'add_teacher.html',{"class_list":class_list,"error":"empty name"})
         teacher_id =sqlhelper.get_list('SELECT id FROM teacher ORDER BY id DESC LIMIT 1;')
         if teacher_id ==[]:
             teacher_id =1
         else:
             teacher_id =teacher_id[0][0] +1
         sqlhelper.modify("INSERT INTO teacher (id,name) VALUES (%s,%s);",[teacher_id,teacher_name])
+        for class_id in class_list:
+            num =sqlhelper.get_list("SELECT * FROM link_t_C ORDER BY id DESC LIMIT 1;")
+            if num==[]:
+                num =1
+            else:
+                num =num[0][0]+1
+            sqlhelper.modify("INSERT INTO link_t_C (id,teacher_id,class_id) VALUES (%s,%s,%s)",[num,teacher_id,int(class_id),])
         return redirect('/teacher/')
+
 
 def del_teacher(request):
     teacher_id =request.GET.get('nid')
+    sqlhelper.modify('DELETE FROM link_t_C WHERE teacher_id=%s;',[teacher_id,])
     sqlhelper.modify('DELETE FROM teacher WHERE id=%s;',[teacher_id,])
     return redirect('/teacher/')
 

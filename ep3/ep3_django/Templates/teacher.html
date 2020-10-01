@@ -6,23 +6,29 @@
     <body>
         <h1>teacher</h1>
         <h3><a href="/add_teacher/" style="color:black">add</a></h3>
-        <table>
+        <table border="1">
             <thead>
                 <tr>
                     <th>id</th>
                     <th>name</th>
+                    <th>class</th>
                     <th>operate</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in teacher_list %}
                     <tr>
-                        <th>{{item.0}}</th>
-                        <th>{{item.1}}</th>
-                        <th>
-                            <a href="/del_teacher/?nid={{item.0}}" style="color: black;">delete</a>|
-                            <a href="/edit_teacher/?nid={{item.0}}" style="color: black;">edit</a>
-                        </th>
+                        <td>{{item.teacher_id}}</td>
+                        <td>{{item.name}}</td>
+                        <td>
+                            {% for title in item.titles %}
+                            <span style="display:inline-block;padding:5px;border:1px solid red;">{{title}}</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="/del_teacher/?nid={{item.teacher_id}}" style="color: black;">delete</a>|
+                            <a href="/edit_teacher/?nid={{item.teacher_id}}" style="color: black;">edit</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -23,4 +23,5 @@ CREATE TABLE IF NOT EXISTS link_t_C(
     PRIMARY KEY(id)
 )ENGINE =InnoDB DEFAULT CHARSET=UTF8;
 SHOW TABLES;
-ALTER TABLE student ADD CONSTRAINT class_student_id FOREIGN KEY(class_id) REFERENCES class(id);
+/* ALTER TABLE student ADD CONSTRAINT class_student_id FOREIGN KEY(class_id) REFERENCES class(id); */
+/* ALTER TABLE link_t_C ADD CONSTRAINT class_class_id FOREIGN KEY(class_id) REFERENCES class(id); */

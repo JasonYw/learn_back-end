@@ -1,11 +1,17 @@
 {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ep3_django",
+            "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "/Users/rico/Desktop/learn_back-end/ep3/ep3_django",
+            "program": "F:/learn_back-end/ep3/ep3_django/manage.py",
+            "args": [
+                "runserver"
+            ],
             "django": true
         }
     ]
