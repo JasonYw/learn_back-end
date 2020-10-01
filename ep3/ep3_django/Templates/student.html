@@ -61,7 +61,7 @@
                             <a href="/edit_student/?nid={{student.0}}" style="color: black;">edit</a>
                         </td>
                         <td>
-                            <button id="start-edit" value="{{student}}">edit</button>
+                            <button class="start-edit" value="{{student}}">edit</button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -84,11 +84,11 @@
 
     <div id="edit-shadow" class="shadow hide"></div>
     <div id="edit-modal" class="add-modal hide">
-        id: <span></span></br>
+        id: <span></span></br> 
         姓名：<input id="edit-name" type="text"></br>
         班级：<select name="classid" id="edit-option">
             {% for class in class_list %}
-            <option>{{class.1}}</option>
+            <option value="{{class.1}}">{{class.1}}</option>
             {% endfor %}
         </select></br>
         <input type="submit" id="Ajax-edit">
@@ -125,17 +125,39 @@
         $('#cancle').click(function(){
             $('#shadow,#add-modal').addClass('hide')
         })
-        $('#start-edit').click(function(){
+        $('.start-edit').click(function(){
             $('#edit-shadow,#edit-modal').removeClass("hide")
             var student =$(this).val().split(",")
-            // var content =student[0].replace("(","")
-            // $('#edit-modal').children('span').text(content)
-            // $("#edit-name").val(student[1].replace("'","").replace("'","").replace(" ",""))
-            // $("edit-option").val(student[2])
-            alert(student)
+            var classname =student[2].replace("'","").replace("'","")
+            var content =student[0].replace("(","")
+            child_of_span =$('#edit-modal').children('span').text(student[0].replace("(","").replace(" ",""))
+            var id_list =[content,student[3].replace(")","").replace(" ","")]
+            $("#edit-name").val(student[1].replace("'","").replace("'","").replace(" ",""))
+            var select="#edit-option  option[value="+classname+"]"
+            $(select).attr("selected",true)
         })
         $('#edit-cancle').click(function(){
-            $('#edit-shadow,#edit-modal').addClass('hide')
+            $('#edit-modal,#edit-shadow').addClass('hide')
+            $('#edit-option  option[selected=true]').attr("selected",false)
+        })
+        $('#Ajax-edit').click(function(){
+            $.ajax({
+                url:'/modal_edit_student/',
+                type:'POST',
+                data:{
+                    'stu_id' :$("#edit-modal").children("span").text(),
+                    'new_name':$('#edit-name').val(),
+                    'new_class':$('#edit-option').val()
+                },
+                success:function(data){
+                    data =JSON.parse(data)
+                    if(data.status){
+                        location.href ="/student/"
+                    }else{
+                        alert(data.message)
+                    }
+                }
+            })
         })
     </script>
 </html>

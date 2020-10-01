@@ -37,4 +37,5 @@ urlpatterns = [
     path("modal_del_class/",modal_views.del_class),
     path("modal_edit_class/",modal_views.edit_class),
     path("modal_add_student/",modal_views.add_student),
+    path("modal_edit_student/",modal_views.edit_student),
 ]

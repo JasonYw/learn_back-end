@@ -71,8 +71,27 @@ def add_student(request):
         ret['message'] =str(e)
     return HttpResponse(json.dumps(ret))
 
-
-
-
-
+def edit_student(request):
+    '''
+    js有bug
+    '''
+    
+    ret ={
+        'status':True,
+        'message':None,
+    }
+    if request.method == "POST":
+        stu_id =request.POST.get("stu_id")
+        new_name =request.POST.get("new_name")
+        new_class =request.POST.get("new_class")
+        if new_name =="":
+            ret['status'] =False
+            ret['message']='new name is empty'
+            return HttpResponse(json.dumps(ret))
+        class_id =sqlhelper.get_list('SELECT id FROM class WHERE title=%s LIMIT 1;',[new_class])[0][0]
+        if sqlhelper.modify('UPDATE student SET name=%s ,class_id=%s WHERE id=%s;',[new_name,class_id,stu_id,]):
+            return HttpResponse(json.dumps(ret))
+        ret['status'] =False
+        ret['message']='sql error'
+        return HttpResponse(json.dumps(ret))
 
