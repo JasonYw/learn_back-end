@@ -127,18 +127,20 @@
         })
         $('.start-edit').click(function(){
             $('#edit-shadow,#edit-modal').removeClass("hide")
-            var student =$(this).val().split(",")
-            var classname =student[2].replace("'","").replace("'","")
-            var content =student[0].replace("(","")
-            child_of_span =$('#edit-modal').children('span').text(student[0].replace("(","").replace(" ",""))
-            var id_list =[content,student[3].replace(")","").replace(" ","")]
-            $("#edit-name").val(student[1].replace("'","").replace("'","").replace(" ",""))
-            var select="#edit-option  option[value="+classname+"]"
-            $(select).attr("selected",true)
+            var tds =$(this).parent().prevAll()
+            var value_list =[]
+            for(var i=0;i<tds.length;i++){
+                value_list[i] =$(tds[i]).text()
+            }
+            stu_id =value_list[3]
+            name =value_list[2]
+            class_name =value_list[1]
+            $("#edit-modal").children("span").text(stu_id)
+            $("#edit-name").val(name)
+            $("#edit-option").val(class_name)
         })
         $('#edit-cancle').click(function(){
             $('#edit-modal,#edit-shadow').addClass('hide')
-            $('#edit-option  option[selected=true]').attr("selected",false)
         })
         $('#Ajax-edit').click(function(){
             $.ajax({

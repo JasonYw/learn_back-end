@@ -72,10 +72,6 @@ def add_student(request):
     return HttpResponse(json.dumps(ret))
 
 def edit_student(request):
-    '''
-    js有bug
-    '''
-    
     ret ={
         'status':True,
         'message':None,
