@@ -61,7 +61,8 @@
                             <a href="/edit_student/?nid={{student.0}}" style="color: black;">edit</a>
                         </td>
                         <td>
-                            <button class="start-edit" value="{{student}}">edit</button>
+                            <button class="start-edit" >edit</button>
+                            <button class="start-delete" value="{{student.0}}" >delete</button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -155,6 +156,23 @@
                     data =JSON.parse(data)
                     if(data.status){
                         location.href ="/student/"
+                    }else{
+                        alert(data.message)
+                    }
+                }
+            })
+        })
+        $(".start-delete").click(function(){
+            $.ajax({
+                url:'/modal_del_student/',
+                type:'POST',
+                data:{
+                    'stu_id':$(this).val()
+                },
+                success:function(data){
+                    data =JSON.parse(data)
+                    if(data.status){
+                        location.href="/student/"
                     }else{
                         alert(data.message)
                     }

@@ -91,3 +91,16 @@ def edit_student(request):
         ret['message']='sql error'
         return HttpResponse(json.dumps(ret))
 
+def del_student(request):
+    ret ={
+        'status':True,
+        'message':None,
+    }
+    if request.method =="POST":
+        stu_id =request.POST.get("stu_id")
+        if sqlhelper.modify("DELETE FROM student WHERE id =%s",[stu_id,]):
+            return HttpResponse(json.dumps(ret))
+        else:
+            ret['status'] =False
+            ret['message'] ='sql error'
+            return HttpResponse(json.dumps(ret))
