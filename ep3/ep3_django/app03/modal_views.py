@@ -112,7 +112,7 @@ def add_teacher(request):
             'message':None
         }
         new_teacher =request.POST.get("title")
-        class_list =request.POST.getlist("class_list[]")
+        class_list =request.POST.getlist("class_list")
         if ( new_teacher == "" or class_list ==None):
             ret['status'] =False
             ret['message'] ='empty data'
@@ -153,7 +153,7 @@ def edit_teacher(request):
     }
     teacher_id =request.POST.get("teacher_id")
     teacher_name =request.POST.get("teacher_name")
-    classid_list =request.POST.getlist("class_list[]")
+    classid_list =request.POST.getlist("class_list")
     if (teacher_name =="" or classid_list ==[]):
         ret={
             'status':False,
@@ -173,3 +173,9 @@ def edit_teacher(request):
         num =num+1
     sql.close()
     return HttpResponse(json.dumps(ret))
+
+def add_1_teacehr(request):
+    sql =sqlhelper.SqlHelper()
+    class_list =sql.get_list("SELECT * FROM class")
+    sql.close()
+    return HttpResponse(json.dumps(class_list))

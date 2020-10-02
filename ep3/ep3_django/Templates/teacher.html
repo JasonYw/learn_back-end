@@ -28,11 +28,20 @@
                 margin-top: -150px;
                 background-color: blanchedalmond;
             }
+            .loding{
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                width: 32px;
+                height: 33px;
+                background-image: url("/static/5-121204193R0.gif");
+            }
         </style>
     </head>
     <body>
         <h1>teacher</h1>
         <h3><a href="/add_teacher/" style="color:black">add</a> <button class="btn-add">add</button></h3>
+        <button class='btn-add-1'>add-1</button>
         <table border="1">
             <thead>
                 <tr>
@@ -92,6 +101,38 @@
             </select>
             <span id="eerror"></span>
         </div>
+
+        <div id="a-shadow" class="shadow hide"></div>
+        <div id="loading" class="loding hide"></div>
+        <div id="a-modal" class="modal hide">
+            <p>
+                老师姓名:<input type="text" name="name" id="teacher_name_1">
+            </p>
+            <p>
+                <select name="" id="class_ids" multiple="multiple" size="5">
+                </select>
+            </p>
+            <button id="add_btn1">add</button>
+            <button id="add_cancle1">cancle</button>
+            <span id="error-1"></span>
+
+
+        <div id="e-shadow" class="shadow hide"></div>
+        <div id="loading" class="loding hide"></div>
+        <div id="e-modal" class="modal hide">
+            <p>
+                老师id:<span></span>
+                老师姓名:<input type="text" name="name" id="teacher_name_e_1">
+            </p>
+            <p>
+                <select name=""e id="class_ids" multiple="multiple" size="5">
+                </select>
+            </p>
+            <button id="add_btn1">add</button>
+            <button id="add_cancle1">cancle</button>
+            <span id="error-1"></span>
+        
+    </div>
     </body>
     <script>
         $('.btn-edit').click(function(){
@@ -110,6 +151,9 @@
                     }
                 }
             }
+        })
+        $('#add_cancle1').click(function(){
+            $('#a-shadow,#a-modal').addClass("hide")
         })
         $('.btn-add').click(function(){
             document.getElementById('shadow').classList.remove('hide')
@@ -135,6 +179,7 @@
                     'title':$('#title').val(),
                     'class_list':class_list
                 },
+                traditional:true,
                 success:function(data){
                     data =JSON.parse(data)
                     if (data.status){
@@ -167,6 +212,7 @@
             $.ajax({
                 url:"/modal_edit_teacher/",
                 type:'POST',
+                traditional:true,
                 data:{
                     'teacher_id':$('#pid').text().replace("teacher id:",""),
                     'teacher_name':$('#e-title').val(),
@@ -183,5 +229,50 @@
             })
 
         })
+        $('.btn-add-1').click(function(){
+            $("#a-shadow,#loading").removeClass("hide")
+            $.ajax({
+                url:"/modal_add_1_teacher/",
+                type:'GET',
+                dataType:'JSON',
+                success:function(data){
+                    $.each(data,function(i,row){
+                        //表示juery的循环，data相当于list，i相当于每一项
+                        //约等于for row in data 
+                        var tag =document.createElement('option')
+                        tag.innerHTML =row[1]
+                        tag.setAttribute('value',row[0])
+                        $('#class_ids').append(tag)
+                    })
+                    $('#loading').addClass("hide")
+                    $("#a-modal").removeClass("hide")
+                }
+            })
+        })
+        $("#add_btn1").click(function(){
+            var class_list =[]
+            $("#class_ids option:selected").each(function(){
+                class_list.push($(this).val())
+            })
+            var teacher=$('#teacher_name_1').val()
+            $.ajax({
+                url:"/modal_add_teacher/",
+                type:"POST",
+                data:{
+                    'title':teacher,
+                    'class_list':class_list,
+                },
+                traditional:true,
+                success:function(data){
+                    data =JSON.parse(data)
+                    if (data.status){
+                        location.href='/teacher/';
+                    }else{
+                        $('#error-1').text(data.message);
+                    }
+                }
+            })
+        })
+
     </script>
 </html>
