@@ -1,0 +1,37 @@
+.myself-hide{
+    display: none  ; 
+}
+.myself-shadow{
+    position: fixed ;
+    background-color: black;
+    left: 0 ; 
+    top: 0 ; 
+    right: 0 ; 
+    bottom: 0 ; 
+    opacity: 0.4 ; 
+    z-index: 999 ; 
+}
+.myself-modal{
+    z-index: 1000 ; 
+    position: fixed ; 
+    background-color: aliceblue;
+    left: 50% ; 
+    top: 50% ; 
+    height: 250px ; 
+    width: 400px ; 
+    margin-left: -200px ; 
+    margin-top: -150px ; 
+}
+.myself-login-form{
+    width: 400px; 
+    margin-top: 150px;
+    margin-left: 650px;
+}
+.myself-loding{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 32px;
+    height: 33px;
+    background-image: url("/static/5-121204193R0.gif");
+}

@@ -2,6 +2,14 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import HttpResponse
 from utils import sqlhelper
+import json
+
+
+def test(request):
+    return render(request,'test.html')
+
+def layout(request):
+    return render(request,'layout.html')
 
 def index_(request):
     if request.GET.get("href") =='class':
@@ -17,13 +25,28 @@ def login(request):
     if request.method == "GET":
         return render(request,'login.html')
     else:
-        user =request.POST.get("email")
-        passwd =request.POST.get("password")
-        sql =sqlhelper.SqlHelper()
-        user_data =sql.get_list('SELECT * FROM user_passwd LIMIT 1')
-        if user_data !=[]:
-            
-        return HttpResponse('200')
+        ret={
+            'statue':True,
+            'message':None,
+        }
+        try:
+            user =request.POST.get("email")
+            passwd =request.POST.get("password")
+            print(user,passwd)
+            if (user =='' or passwd ==''):
+                raise Exception('empty data')
+            sql =sqlhelper.SqlHelper()
+            user_data =sql.get_list('SELECT email,passwd FROM user_passwd WHERE email=%s LIMIT 1',[user,])
+            if user_data ==[]:
+                raise Exception('user not create')
+            if (user == user_data[0][0] and  passwd ==user_data[0][1]):
+                return HttpResponse(json.dumps(ret))
+            raise Exception('wrong user or password')
+        except Exception as e:
+            ret['statue']= False
+            ret['message'] =str(e)
+            return HttpResponse(json.dumps(ret))
+
 
 def classes(request):
     class_list =sqlhelper.get_list("SELECT * FROM class;")

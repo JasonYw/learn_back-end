@@ -299,6 +299,24 @@
             }
         })
 
+    7.封装SqlHelper
+
+    8.AJAX发送数据
+        若data对应的是列表，添加traditional：true
+        data不支持字典，若发送字典，通过JSON.stringify() 更改
+        $.ajax({
+            url:'',
+            type:'',
+            data:{
+
+            },
+            tradational.true，
+            dataType:'JSON',
+            success:func(data){
+                data=JSON.parse()  /转换成json
+            }
+        })
+    
 
 
 学员管理：
@@ -346,9 +364,31 @@
     4.fontawesome 图标  
 
 
+    1.Bootstrap
+        -一个包含CSS和JS的一个代码库
+        -样式
+        -响应式
+            --根据窗口大小进行变化 css @media关键字
+            --导航条
+            --栅格
+    
+    2.完善学员管理系统
+        -后台管理布局
+        
+        
+
+
 今日内容：
     -美化页面
     -用户登录
+
+今日内容：
+    -bootstrap
+    -后台管理布局
+    -cookie
+    -django
+        -母版
+        -路由系统
 
 
 

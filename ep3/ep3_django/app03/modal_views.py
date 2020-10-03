@@ -179,3 +179,34 @@ def add_1_teacehr(request):
     class_list =sql.get_list("SELECT * FROM class")
     sql.close()
     return HttpResponse(json.dumps(class_list))
+
+def register(request):
+    if request.method =="POST":
+        print(request.POST)
+        sql =sqlhelper.SqlHelper()
+        ret={
+            'statue':True,
+            'message':None
+        }
+        try:
+            email =request.POST.get("email")
+            passwd =request.POST.get("passwd")
+            if (email=='' or passwd==''):
+                raise Exception('emypt data')
+            num =sql.get_list("SELECT id FROM user_passwd ORDER BY id DESC LIMIT 1")
+            if num ==[]:
+                num =1
+            else:
+                num =num[0][0] +1
+            if not sql.modify("INSERT INTO user_passwd (id,email,passwd) VALUES (%s,%s,%s);",[num,email,passwd]):
+                raise Exception("wrong register")
+            return HttpResponse(json.dumps(ret))
+        except Exception as e:
+            ret['statue'] =False
+            ret['message']=str(e)
+            return HttpResponse(json.dumps(ret))
+        finally:
+            sql.close()
+
+def self_manage(request):
+    return render(request,'self_manage.html')

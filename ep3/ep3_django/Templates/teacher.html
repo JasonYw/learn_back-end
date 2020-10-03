@@ -2,41 +2,10 @@
     <head lang="en">
         <meta charset="utf-8">
         <title>teacher</title>
-        <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
-        <style>
-            .hide{
-                display: none;
-            }
-            .shadow{
-                position: fixed;
-                left: 0;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                background-color: black;
-                opacity: 0.4;
-                z-index: 999;
-            }
-            .modal{
-                z-index: 1000;
-                position: fixed;
-                left: 50%;
-                top: 50%;
-                height: 250px;
-                width: 400px;
-                margin-left: -200px;
-                margin-top: -150px;
-                background-color: blanchedalmond;
-            }
-            .loding{
-                position: fixed;
-                left: 50%;
-                top: 50%;
-                width: 32px;
-                height: 33px;
-                background-image: url("/static/5-121204193R0.gif");
-            }
-        </style>
+        <script src="/static/jquery.js"></script>
+        <link rel="stylesheet" href="/static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
+        <link rel="stylesheet" href="/static/myself-class.css">
+        <link rel="stylesheet" href="/static/plugin/font-awesome-4.7.0/css/font-awesome.css">
     </head>
     <body>
         <h1>teacher</h1>
@@ -75,10 +44,10 @@
             </tbody>
         </table>
         <a href="/">return</a>
-        <div id="shadow" class="shadow hide"></div>
-        <div id="modal" class="modal hide">
+        <div id="shadow" class="myself-shadow myself-hide"></div>
+        <div id="modal" class="myself-modal myself-hide">
             <p style="margin-left: 10px;">添加老师的名字：<input id ="title" type="text" name="title"></p>
-            <input type="submit" value="提交" onclick="AjaxSend();" style="margin-left: 10px;">
+            <input type="button" value="提交" onclick="AjaxSend();" style="margin-left: 10px;">
             <button onclick="cancleModal();">cancle</button>
             <select id="class_list" name="selected_class" multiple="multiple">
                 {% for class in class_list %}
@@ -87,12 +56,12 @@
             </select>
             <span id="error"></span>
         </div>
-        <div id="e-shadow" class="shadow hide"></div>
-        <div id="e-modal" class="modal hide">
+        <div id="e-shadow" class="myself-shadow myself-hide"></div>
+        <div id="e-modal" class="myself-modal myself-hide">
             <p id="pid" style="margin-left: 10px;"></p>
             老师的名字：<span style="margin-left: 10px;"><input id ="e-title" type="text" name="title"></span>
             <br/>
-            <input type="submit" value="提交" id="e-submit" style="margin-left: 10px;">
+            <input type="button" value="提交" id="e-submit" style="margin-left: 10px;">
             <button onclick="ecancleModal();">cancle</button>
             <select id="eclass_list" name="selected_class" multiple="multiple">
                 {% for class in class_list %}
@@ -102,9 +71,9 @@
             <span id="eerror"></span>
         </div>
 
-        <div id="a-shadow" class="shadow hide"></div>
-        <div id="loading" class="loding hide"></div>
-        <div id="a-modal" class="modal hide">
+        <div id="a-shadow" class="myself-shadow myself-hide"></div>
+        <div id="loading" class="myself-loding myself-hide"></div>
+        <div id="a-modal" class="myself-modal myself-hide">
             <p>
                 老师姓名:<input type="text" name="name" id="teacher_name_1">
             </p>
@@ -117,15 +86,15 @@
             <span id="error-1"></span>
 
 
-        <div id="e-shadow" class="shadow hide"></div>
-        <div id="loading" class="loding hide"></div>
-        <div id="e-modal" class="modal hide">
+        <div id="e-shadow" class="myself-shadow myself-hide"></div>
+        <div id="loading" class="myself-loding myself-hide"></div>
+        <div id="e-modal" class="myself-modal myself-hide">
             <p>
                 老师id:<span></span>
                 老师姓名:<input type="text" name="name" id="teacher_name_e_1">
             </p>
             <p>
-                <select name=""e id="class_ids" multiple="multiple" size="5">
+                <select  id="class_ids" multiple="multiple" size="5">
                 </select>
             </p>
             <button id="add_btn1">add</button>
@@ -136,8 +105,8 @@
     </body>
     <script>
         $('.btn-edit').click(function(){
-            document.getElementById('e-shadow').classList.remove('hide')
-            document.getElementById('e-modal').classList.remove('hide')
+            document.getElementById('e-shadow').classList.remove('myself-hide')
+            document.getElementById('e-modal').classList.remove('myself-hide')
             var teacher_data =$(this).parent().prevAll()
             $('#e-title').val($(teacher_data[2]).text())
             $('#pid').text('teacher id:'+$(teacher_data[3]).text())
@@ -153,19 +122,19 @@
             }
         })
         $('#add_cancle1').click(function(){
-            $('#a-shadow,#a-modal').addClass("hide")
+            $('#a-shadow,#a-modal').addClass("myself-hide")
         })
         $('.btn-add').click(function(){
-            document.getElementById('shadow').classList.remove('hide')
-            document.getElementById('modal').classList.remove('hide')
+            document.getElementById('shadow').classList.remove('myself-hide')
+            document.getElementById('modal').classList.remove('myself-hide')
         })
         function ecancleModal(){
-            document.getElementById('e-shadow').classList.add('hide')
-            document.getElementById('e-modal').classList.add('hide')
+            document.getElementById('e-shadow').classList.add('myself-hide')
+            document.getElementById('e-modal').classList.add('myself-hide')
         }
         function cancleModal(){
-            document.getElementById('shadow').classList.add('hide')
-            document.getElementById('modal').classList.add('hide')
+            document.getElementById('shadow').classList.add('myself-hide')
+            document.getElementById('modal').classList.add('myself-hide')
         }
         function AjaxSend(){
             var class_list=[]
@@ -230,7 +199,7 @@
 
         })
         $('.btn-add-1').click(function(){
-            $("#a-shadow,#loading").removeClass("hide")
+            $("#a-shadow,#loading").removeClass("myself-hide")
             $.ajax({
                 url:"/modal_add_1_teacher/",
                 type:'GET',
@@ -244,8 +213,8 @@
                         tag.setAttribute('value',row[0])
                         $('#class_ids').append(tag)
                     })
-                    $('#loading').addClass("hide")
-                    $("#a-modal").removeClass("hide")
+                    $('#loading').addClass("myself-hide")
+                    $("#a-modal").removeClass("myself-hide")
                 }
             })
         })

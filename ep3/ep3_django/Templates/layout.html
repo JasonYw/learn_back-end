@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+    <head lang="en">
+        <meta charset="utf-8">
+        <title>layout</title>
+        <script src="/static/jquery.js"></script>
+        <link rel="stylesheet" href="/static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
+        <link rel="stylesheet" href="/static/plugin/font-awesome-4.7.0/css/font-awesome.css">
+        <style>
+            body{
+                margin: 0;
+            }
+            .left{
+                float: left;
+            }
+            .right{
+                float: right;
+            }
+            .hide{
+                display: none;
+            }
+            .pg-header{
+                height: 48px;
+                background-color: darkorange;
+                line-height: 48px;
+            }
+            .pg-header .logo{
+                width: 199px;
+                text-align: center;
+                color: white;
+                font-size: 18px;
+                border-right: 1px solid bisque;
+            }
+            .pg-header .rmenus a{
+                display: inline-block;
+                padding: 0 15px;
+                color: white;
+            }
+            .pg-header .rmenus a:hover{
+                background-color: violet;
+            }
+            .pg-header .avatar{
+                padding: 0 20px;
+            }
+            .pg-header .avatar img{
+                border-radius: 50%;
+            }
+            .pg-header .avatar:hover .user_info{
+                display: block;
+            }
+            .pg-header .avatar .user_info{
+                display: none;
+                position: absolute;
+                width: 200px; 
+                top: 48px; 
+                right: 10px; 
+                background-color: darkkhaki; 
+                border: 1px solid darkgoldenrod;
+                z-index: 100;
+            }
+            .pg-header .avatar .user_info a{
+                display: block;
+            }
+            .menus{
+                position:absolute;
+                bottom: 0px;
+                left: 0px;
+                top: 48px;
+                width: 200px;
+                background-color: darksalmon;
+            }
+            .content{
+                position: absolute;
+                left:200px;
+                right: 0;
+                top: 48px;
+                bottom: 0;
+                overflow: scroll;
+                z-index: 99;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="pg-header">
+            <div class="logo left">old child</div>
+            <div class="rmenus right">
+                <div class="avatar right" style="position: relative;">
+                    <img style="width: 40px; height:40px;" src="/static/1.jpg" alt="">
+                    <div class="user_info">
+                        <a href="">profile</a>
+                        <a href="">login out</a>
+                    </div>
+                </div>
+                <a href=""><i class="fa fa-envelope-open-o" aria-hidden="true"></i>email</a>
+                <a href=""><i class="fa fa-clipboard"></i>message</a>
+            </div>
+        </div>
+        <div class="pg-body">
+            <div class="menus">菜单</div>
+            <div class="content">内容</div>
+        </div>
+    </body>
+</html>
