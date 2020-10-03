@@ -20,7 +20,8 @@ from app03 import modal_views
 
 
 urlpatterns = [
-    path('',views.index_),
+    path('',views.login),
+    path('index/',views.index_),
     path('class/', views.classes),
     path("add_class/",views.add_class),
     path("del_class/",views.del_class),

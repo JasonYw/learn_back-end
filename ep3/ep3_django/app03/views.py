@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.shortcuts import HttpResponse
 from utils import sqlhelper
 
 def index_(request):
@@ -11,6 +12,18 @@ def index_(request):
         return redirect('/student/')
     else:
         return render(request,'index.html')
+
+def login(request):
+    if request.method == "GET":
+        return render(request,'login.html')
+    else:
+        user =request.POST.get("email")
+        passwd =request.POST.get("password")
+        sql =sqlhelper.SqlHelper()
+        user_data =sql.get_list('SELECT * FROM user_passwd LIMIT 1')
+        if user_data !=[]:
+            
+        return HttpResponse('200')
 
 def classes(request):
     class_list =sqlhelper.get_list("SELECT * FROM class;")
