@@ -375,14 +375,75 @@
         -装饰器装饰views中其他函数中
 
 
+内容回顾：
+    1.母版
+        layout.html
+            '''
+            {% block x %}
+            {% endblock %}
+            '''
+
+    2.子板
+        index.html
+            {% extends 'xxx.html' %}
+            {% block x %}
+                ...
+            {% endblock %}
+    
+    3.cookie
+        在浏览器上保存的键值对
+        
+        def index(request):
+            request.COOKIES.get()
+
+
+
+
 
 今日作业：
     1.布局+代码
     2.登录cookie+装饰器
     3.布局页面的HTML加css
+
+坦白：
+    project
+        -app01 自己创建的目录
+            -views.py 通过命令可以创建
+        -SQLHelper 封装SQL操作
+
+    非主流的
+        -1.创建app
+        -2.数据库操作
+
+    Django：
+        -路由系统
+        -视图函数
+        -模板
+        -ORM（类和表：对象-行；pymysql连接数据库） 操作数据库做了一个类和对象的映射
+
+    Torando
+        -路由
+        -视图
+        -模板
+        -自由：pymysql sqlachemy
     
+    flask
+        pymysql sqlachemy
 
 
+今日内容：
+    1.路由系统
+    2.视图函数 CBV，FBV
+        FBV 视图基于函数
+        CBV 视图基于类
+    3.django的ORM操作
+
+
+
+
+作业：
+    学员管理
+        把原生sql全部替换掉
 
 
 
