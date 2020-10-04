@@ -316,7 +316,74 @@
                 data=JSON.parse()  /转换成json
             }
         })
+
+
+内容整理：
+    -Bootstrap响应式布局：@meida()
+
+    -栅格：
+        12格
     
+    -表格：
+    
+    -导航条：
+
+    -路径导航
+
+    -fontawesome
+
+    -布局postion:absolute
+
+    -xx:hover .xxxxx{  当鼠标移动xx样式上时，子标签xxxxx应用以下的属性
+    }
+
+    -django母版
+        母版：
+        <html>
+            '''
+                {% block xx %}
+                {% endblock %}
+            '''
+
+        </html>
+        子版：
+
+                {% extends 'layout.html' %}
+                {% block xx %}
+                    '''
+                {% endblock %}
+    
+    用户登录
+        cookie 保存在游览器端的键值对，设置超时时间
+
+                -发送http请求时，在请求头中携带可访问的cookie
+                -响应头
+
+        -django回写cookie
+            def xx(request):
+                obj =HttpResponse('...')
+                obj.set_cookie(...)
+                request.COOKIES.get(...)
+
+                obj.set_signed_cookie(...,salt='')
+                request.get_signed_cookie(....,salt='')  
+                salt 为签名
+
+        -自定义cookie签名
+            正解反解都要自己写
+
+        -装饰器装饰views中其他函数中
+
+
+
+今日作业：
+    1.布局+代码
+    2.登录cookie+装饰器
+    3.布局页面的HTML加css
+    
+
+
+
 
 
 学员管理：
@@ -410,17 +477,7 @@
         
 
 
-今日内容：
-    -美化页面
-    -用户登录
 
-今日内容：
-    -bootstrap
-    -后台管理布局
-    -cookie
-    -django
-        -母版
-        -路由系统
 
 
 
@@ -439,37 +496,4 @@
         -删
         -改
         -查
-
-作业内容
-    -老师表
-    -添加按钮
-        -任教老师
-        -班级 下拉框 多选
-        -班级id 老师id
-        老师表里加老师
-        关系表里加id
-        getlist
-    -select 框
-        已经教过的班级
-        未教的班级
-        左右移动
-
-作业内容
-    用户登录操作
-        -创建用户表
-        -用户登录页
-        -bootstrap
-        -登陆后 后台管理
-        -后台管理 
-            -上面
-                -随便写
-                系统名称 头像 用户信息
-            -左菜单
-                -学生、老师、班级、管理
-        -必须完成
-            -表格好看
-            -后台管理的布局
-
-Django基础
-前端知识
 

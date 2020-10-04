@@ -6,6 +6,8 @@ import json
 import datetime
 from datetime import timedelta
 
+
+
 def test(request):
     return render(request,'test.html')
 
@@ -13,13 +15,6 @@ def layout(request):
     return render(request,'layout.html')
 
 def index_(request):
-    # if request.GET.get("href") =='class':
-    #     return redirect('/class/')
-    # elif request.GET.get("href") == 'teacher':
-    #     return redirect('/teacher/')
-    # elif request.GET.get("href") == 'student':
-    #     return redirect('/student/')
-    # else:
     return redirect('/login/')
 
 def login(request):
@@ -38,7 +33,7 @@ def login(request):
                 raise Exception('user not create')
             if (user == user_data[0][0] and  passwd ==user_data[0][1]):
                 obj =redirect('/class/')
-                obj.set_signed_cookie('ticket','cookie',max_age=10,salt='jjjjj') #max_age 超时时间单位s 推荐max_age
+                obj.set_signed_cookie('ticket','cookie',max_age=100000,salt='pass') #max_age 超时时间单位s 推荐max_age
                 return obj
                 '''
                 key: str,
@@ -79,6 +74,20 @@ def login(request):
             return redirect('/login/')
 
 
+def check(func):
+    def check_pass(request):
+        try:
+            tk =request.get_signed_cookie('ticket',salt='pass')
+            print(tk)
+            if tk != 'cookie':
+                raise Exception('wrong error')
+            return func(request)
+        except:
+            return redirect('/login/')
+    return check_pass
+
+
+@check
 def classes(request):
     '''
     去请求的cookie中获取凭证
@@ -86,13 +95,11 @@ def classes(request):
     if not tk:
         return redirect('/login/')
     '''
-    tk =request.get_signed_cookie('ticket','jjjjj')
-    if not tk:
-        return redirect('/login/')
-
     class_list =sqlhelper.get_list("SELECT * FROM class;")
     return render(request,'class.html',{'class_list':class_list})
 
+
+@check
 def add_class(request):
     
     if request.method =="GET":
@@ -107,6 +114,7 @@ def add_class(request):
         sqlhelper.modify('INSERT IGNORE INTO class (id,title) VALUES (%s,%s);',[class_id,class_name,])
         return redirect('/class/')
 
+@check
 def del_class(request):
     class_id =request.GET.get("nid")
     if sqlhelper.modify("DELETE FROM class WHERE id =%s;",[class_id,]):
@@ -114,6 +122,7 @@ def del_class(request):
     else:
         return redirect('/class/')
 
+@check
 def edit_class(request):
     if request.method == "GET":
         class_id =request.GET.get("nid")
@@ -127,6 +136,7 @@ def edit_class(request):
         sqlhelper.modify("UPDATE class SET title=%s WHERE id=%s;",[class_title,class_id])
         return redirect('/class/')
  
+@check
 def teacher(request):
     teacher_list =sqlhelper.get_list('''
             SELECT  l.id,t.id teacher_id,t.name,c.id class_id,c.title FROM teacher t
@@ -146,6 +156,7 @@ def teacher(request):
             dict_[key[1]]['titles'].append(key[4])
     return render(request,'teacher.html',{'teacher_list':dict_.values(),'class_list':class_list})
 
+@check
 def add_teacher(request):
     if request.method =="GET":
         class_list =sqlhelper.get_list("SELECT * FROM class")
@@ -172,12 +183,14 @@ def add_teacher(request):
         return redirect('/teacher/')
 
 
+@check
 def del_teacher(request):
     teacher_id =request.GET.get('nid')
     sqlhelper.modify('DELETE FROM link_t_C WHERE teacher_id=%s;',[teacher_id,])
     sqlhelper.modify('DELETE FROM teacher WHERE id=%s;',[teacher_id,])
     return redirect('/teacher/')
 
+@check
 def edit_teacher(request):
     if request.method =='GET':
         sql =sqlhelper.SqlHelper()
@@ -215,12 +228,14 @@ def edit_teacher(request):
         sql.close()
         return redirect('/teacher/')
 
+@check
 def student(request):
     student_list =sqlhelper.get_list('SELECT s.id,s.name,c.title class,c.id FROM student s LEFT OUTER JOIN class c ON s.class_id =c.id;')
     class_list =sqlhelper.get_list('SELECT * FROM class;')
     return render(request,"student.html",{'student_list':student_list,'class_list':class_list,})
 
 
+@check
 def add_student(request):
     if request.method =="GET":
         class_list =sqlhelper.get_list('SELECT * FROM class;')
@@ -239,12 +254,14 @@ def add_student(request):
         else:
             return render(request,"add_student.html")
 
+@check
 def del_student(request):
     student_id = request.GET.get("nid")
     sqlhelper.modify("DELETE FROM student WHERE id=%s;",[student_id])
     return redirect('/student/')
 
 
+@check
 def edit_student(request):
     if request.method == 'GET':
         class_list =sqlhelper.get_list('SELECT * FROM class;')

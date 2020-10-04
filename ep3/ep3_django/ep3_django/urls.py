@@ -25,7 +25,6 @@ urlpatterns = [
     path('login/',views.login),
     path('',views.index_),
     path('modal_register/',modal_views.register),
-    path('manage/',modal_views.self_manage),
     path('class/', views.classes),
     path("add_class/",views.add_class),
     path("del_class/",views.del_class),

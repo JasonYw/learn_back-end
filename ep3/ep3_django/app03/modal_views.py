@@ -5,6 +5,20 @@ from utils import sqlhelper
 import time
 import json
 
+
+def check(func):
+    def check_pass(request):
+        try:
+            tk =request.get_signed_cookie('ticket',salt='pass')
+            print(tk)
+            if tk != 'cookie':
+                raise Exception('wrong error')
+            return func(request)
+        except:
+            return redirect('/login/')
+    return check_pass
+    
+@check
 def add_class(request):
     '''
     页面不刷新,提示错误信息
@@ -25,14 +39,15 @@ def add_class(request):
         return HttpResponse('ok')
     else:
         return HttpResponse('班级不能为空')
-
+@check
 def del_class(request):
     class_id =request.POST.get("class_id")
     if sqlhelper.modify('DELETE FROM class WHERE id =%s;',[class_id,]):
         return HttpResponse('200')
     else:
         return HttpResponse('404')
-    
+
+@check
 def edit_class(request):
     if request.method == "GET":
         class_id =request.GET.get("nid")
@@ -47,6 +62,7 @@ def edit_class(request):
         sqlhelper.modify('UPDATE class SET title=%s WHERE id=%s;',[new_classname,class_id,])
         return HttpResponse('200')
 
+@check
 def add_student(request):
     ret ={
         'status':True,
@@ -71,6 +87,8 @@ def add_student(request):
         ret['message'] =str(e)
     return HttpResponse(json.dumps(ret))
 
+
+@check
 def edit_student(request):
     ret ={
         'status':True,
@@ -91,6 +109,8 @@ def edit_student(request):
         ret['message']='sql error'
         return HttpResponse(json.dumps(ret))
 
+
+@check
 def del_student(request):
     ret ={
         'status':True,
@@ -105,6 +125,8 @@ def del_student(request):
             ret['message'] ='sql error'
             return HttpResponse(json.dumps(ret))
 
+
+@check
 def add_teacher(request):
     if request.method =="POST":
         ret={
@@ -134,6 +156,8 @@ def add_teacher(request):
             num =num+1
         return HttpResponse(json.dumps(ret))
 
+
+@check
 def del_teacher(request):
     ret={
         'status':True,
@@ -146,6 +170,8 @@ def del_teacher(request):
     sql.close()
     return HttpResponse(json.dumps(ret))
 
+
+@check
 def edit_teacher(request):
     ret={
         'status':True,
@@ -174,6 +200,8 @@ def edit_teacher(request):
     sql.close()
     return HttpResponse(json.dumps(ret))
 
+
+@check
 def add_1_teacehr(request):
     sql =sqlhelper.SqlHelper()
     class_list =sql.get_list("SELECT * FROM class")
@@ -207,6 +235,3 @@ def register(request):
             return HttpResponse(json.dumps(ret))
         finally:
             sql.close()
-
-def self_manage(request):
-    return render(request,'self_manage.html')
