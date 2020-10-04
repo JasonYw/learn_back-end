@@ -9,10 +9,10 @@
     right: 0 ; 
     bottom: 0 ; 
     opacity: 0.4 ; 
-    z-index: 999 ; 
+    z-index: 1400 ; 
 }
 .myself-modal{
-    z-index: 1000 ; 
+    z-index: 1401 ; 
     position: fixed ; 
     background-color: aliceblue;
     left: 50% ; 
@@ -33,5 +33,5 @@
     top: 50%;
     width: 32px;
     height: 33px;
-    background-image: url("/static/5-121204193R0.gif");
+    background-image: url("/static/IMAGE/5-121204193R0.gif");
 }

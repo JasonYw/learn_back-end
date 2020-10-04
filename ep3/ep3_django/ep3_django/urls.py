@@ -22,8 +22,8 @@ from app03 import modal_views
 urlpatterns = [
     path('test/',views.test),
     path('layout/',views.layout),
-    path('',views.login),
-    path('index/',views.index_),
+    path('login/',views.login),
+    path('',views.index_),
     path('modal_register/',modal_views.register),
     path('manage/',modal_views.self_manage),
     path('class/', views.classes),

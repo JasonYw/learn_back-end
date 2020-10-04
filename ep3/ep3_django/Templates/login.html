@@ -1,126 +1,123 @@
-<!DOCTYPE html>
-    <head lang="en">
-        <meta charset="utf-8">
-        <title>login</title>
-        <script src="/static/jquery.js"></script>
-        <link rel="stylesheet" href="/static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
-        <link rel="stylesheet" href="/static/myself-class.css">
-    </head>
-    <body>
-
-      <form class="form-horizontal myself-login-form">
-          <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-            <div class="col-sm-10">
-              <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-            <div class="col-sm-10">
-              <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Remember me
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <button type="button" class="btn btn-default" id="login_submit">Sign in</button>
-              <button type="button" class="btn btn-default" id="register_submit">register</button>
-            </div>
-          </div>
-      </form>
-
-
-      <div id="login-shadow" class="myself-shadow myself-hide"></div>
-      <div id="login-modal" class="myself-modal myself-hide">
-        <form class="form-horizontal" style="margin-top: 15px; margin-right: 15px; margin-left: 15px;">
-          <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-            <div class="col-sm-10">
-              <input type="email" class="form-control" id="registerEmail3" placeholder="Email">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-            <div class="col-sm-10">
-              <input type="password" class="form-control" id="registerPassword3" placeholder="Password">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">Password again</label>
-            <div class="col-sm-10">
-              <input type="password" class="form-control" id="registerPassword4" placeholder="Password">
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <button type="button" class="btn btn-default" id="ajex_register">register</button>
-            </div>
-          </div>
-        </form>
+{% extends 'layout.html' %}
+{% block css %}
+{% endblock %}
+{% block xx %}
+  <form class="form-horizontal myself-login-form" style="width: 500px; height: 300px; margin-left: 20px; margin-top: 50px;" action="/login/" method="POST">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" id="inputEmail3" name="email" placeholder="Email">
+        </div>
       </div>
-    </body>
-    <script>
-        $("#login_submit").click(function(){
-            email =$("#inputEmail3").val()
-            password =$("#inputPassword3").val()
-            $.ajax({
-                url:'',
-                type:'POST',
-                dataType:'JSON',
-                data:{
-                    'email' :email,
-                    'password':password
-                },
-                success:function(data){
-                    if(data.statue){
-                        location.href ='/index/'
-                    }else{
-                        alert(data.message)
-                    }
-                }
-            })
-        })
-        $("#register_submit").click(function(){
-          $('#login-shadow,#login-modal').removeClass("myself-hide")
-        })
-        $("#ajex_register").click(function(){
-          email =$("#registerEmail3").val()
-          passwd =$("#registerPassword3").val()
-          passwd_again =$('#registerPassword4').val()
-          if(passwd == passwd_again){
-            $.ajax({
-              url:'/modal_register/',
+      <div class="form-group">
+        <label for="inputPassword3" class="col-sm-2 control-label" >Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="inputPassword3" placeholder="Password"  name="password">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"> Remember me
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <input type="submit" class="btn btn-default" id="login_submit" value="sign in">
+          <button type="button" class="btn btn-default" id="register_submit">register</button>
+        </div>
+      </div>
+  </form>
+
+
+  <div id="login-shadow" class="myself-shadow myself-hide"></div>
+  <div id="login-modal" class="myself-modal myself-hide">
+    <form class="form-horizontal" style="margin-top: 15px; margin-right: 15px; margin-left: 15px;">
+      <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" id="registerEmail3" placeholder="Email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="registerPassword3" placeholder="Password">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword3" class="col-sm-2 control-label">Password again</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="registerPassword4" placeholder="Password">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="button" class="btn btn-default" id="ajex_register">register</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+{% block xx-1 %}
+  <!-- <script>
+      $("#login_submit").click(function(){
+          email =$("#inputEmail3").val()
+          password =$("#inputPassword3").val()
+          $.ajax({
+              url:'',
               type:'POST',
               dataType:'JSON',
               data:{
-                'email':email,
-                'passwd':passwd,
+                  'email' :email,
+                  'password':password
               },
               success:function(data){
-                if(data.statue){
-                  location.href=''
-                }else{
-                  alert('wrong register')
-                }
+                  if(data.statue){
+                      location.href ='/index/'
+                  }else{
+                      alert(data.message)
+                  }
               }
-            })
-          }else{
-            alert('please enter the same password')
-          }
-        })
-    </script>
-</html>
+          })
+      }) -->
+  <!-- <script> 
+      $("#register_submit").click(function(){
+        $('#login-shadow,#login-modal').removeClass("myself-hide")
+      })
+      $("#ajex_register").click(function(){
+        email =$("#registerEmail3").val()
+        passwd =$("#registerPassword3").val()
+        passwd_again =$('#registerPassword4').val()
+        if(passwd == passwd_again){
+          $.ajax({
+            url:'/modal_register/',
+            type:'POST',
+            dataType:'JSON',
+            data:{
+              'email':email,
+              'passwd':passwd,
+            },
+            success:function(data){
+              if(data.statue){
+                location.href=''
+              }else{
+                alert('wrong register')
+              }
+            }
+          })
+        }else{
+          alert('please enter the same password')
+        }
+      })
+  </script>  -->
+{% endblock %}
+
 

@@ -374,6 +374,38 @@
     
     2.完善学员管理系统
         -后台管理布局
+        -Django母版
+            母版：存放所有页面公用的
+            子板：
+                -继承母版
+                -自定义当前页面私有的东西
+    
+    3.cookie
+        -浏览器端保存的键值对，不是服务器端！！！
+        -服务端可以修改客户端cookie，
+        -游览器访问服务端是携带cookie的
+        -cookie放在请求头中
+        -cookie一般做用户登录
+
+    应用
+        -投票
+        -用户登录
+    
+    set_cookie
+        KEY,
+        VALUE="",
+        max_age cookie有效周期
+        expires, cookie到期日
+        path url限制
+        domain 域名限制
+        secure https
+        httponly 无法在js中找到cookie，只能在http请求中传输，通过js代码无法获取到，通过抓包可以获得
+
+    set_signed_cookie('key','vlue',salt='')
+        -cookie的签名
+
+    自定制签名
+    装饰器
         
         
 

@@ -1,59 +1,48 @@
-<!DOCTYPE html>
-    <head lang="en">
-        <meta charset="utf-8">
-        <title>classes</title>
-        <script src="/static/jquery.js"></script>
-        <link rel="stylesheet" href="/static/plugin/font-awesome-4.7.0/css/font-awesome.css">
-        <link rel="stylesheet" href="/static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
-        <link rel="stylesheet" href="/static/myself-class.css">
-    </head>
-    <body>
-        <div style="width: 700px; margin: 0 auto;">
-            <h1>classes</h1>
-            <div style="margin-bottom: 10px;">
-                <a style="display: none" href="/add_class/" class="btn btn-info glyphicon glyphicon-plus"></a>
-                <button onclick="showModal()" class="btn btn-info glyphicon glyphicon-plus"></button>
-            </div>
-            <table class="table table-striped table-bordered table-hover ">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>class</th>
-                        <th style="display: none;">operate</th>
-                        <th>operate_</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for class in class_list %}
-                        <tr>
-                            <td>{{class.0}}</td>
-                            <td>{{class.1}}</td>
-                            <td style="display: none;">
-                                <a href="/del_class/?nid={{class.0}}" class="btn btn-danger glyphicon glyphicon-trash"></a>
-                                
-                                <a href="/edit_class/?nid={{class.0}}" class="btn btn-warning glyphicon glyphicon-pencil"></a>
-                            </td>
-                            <td>
-                                <button value="{{class.0}}" class="btn btn-danger glyphicon glyphicon-trash" onclick="AjaxDelete(this);"></button>
-                                <button value="{{class.0}}" class="btn btn-warning glyphicon glyphicon-pencil" onclick="AjaxEdit(this);"></button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <a href="/" class="fa fa-mail-reply-all"></a>
+{% extends 'layout.html' %}
+
+{% block css %}
+    <script src="/static/myself_js/class.js"></script>
+{% endblock %}
+{% block xx %}
+    <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">班级管理</a></li>
+        <li class="active">添加班级</li>
+    </ol>
+    <div>
+        <div style="margin-bottom: 10px;">
+            <a style="display: none" href="/add_class/" class="btn btn-info glyphicon glyphicon-plus"></a>
+            <button onclick="showModal()" class="btn btn-info glyphicon glyphicon-plus"></button>
         </div>
-    </body>
-    <!-- 表单提交无法完成不刷新页面提交 -->
-    <!-- <div id="shadow" class="shadow hide"></div>
-    <div id="modal" class="modal hide">
-        <form action="/modal_add_class/" method="POST">
-            <P>
-                <input type="text" name="title">
-            </P>
-            <input type="submit" value="提交">
-        </form>
-    </div> -->
+        <table class="table table-striped table-bordered table-hover ">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>class</th>
+                    <th style="display: none;">operate</th>
+                    <th>operate_</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for class in class_list %}
+                    <tr>
+                        <td>{{class.0}}</td>
+                        <td>{{class.1}}</td>
+                        <td style="display: none;">
+                            <a href="/del_class/?nid={{class.0}}" class="btn btn-danger glyphicon glyphicon-trash"></a>
+                            
+                            <a href="/edit_class/?nid={{class.0}}" class="btn btn-warning glyphicon glyphicon-pencil"></a>
+                        </td>
+                        <td>
+                            <button value="{{class.0}}" class="btn btn-danger glyphicon glyphicon-trash" onclick="AjaxDelete(this);"></button>
+                            <button value="{{class.0}}" class="btn btn-warning glyphicon glyphicon-pencil" onclick="AjaxEdit(this);"></button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}
+{% block xx-1 %}        
     <div id="shadow" class="myself-shadow myself-hide"></div>
     <div id="modal" class="myself-modal myself-hide">
         <form class="form-horizontal" style="margin-left: 50px; margin-top: 30px;">
@@ -62,11 +51,11 @@
                 <input type="text" class="form-control" id ="title" name="title">
             </div>
             <div class="form-group" style="margin-left: -30px;">
-              <div class="col-sm-10">
+            <div class="col-sm-10">
                 <input type="button" class="btn btn-default" value="提交" onclick="AjaxSend();">
                 <button class="btn btn-default" name="add_class" id="cancle_add_class">Cancle</button>
                 <span id="error"></span>
-              </div>
+            </div>
             </div>
         </form>
     </div>
@@ -74,110 +63,24 @@
 
     <div id="shadow-edit" class="myself-shadow myself-hide"></div>
     <div id="modal-edit" class="myself-modal myself-hide">
-        <form class="form-horizontal" style="margin-left: 50px; margin-top: 30px;">
-            <div class="form-group" style="width: 200px;">
-                <label for="exampleInputEmail1">class id:<span id="s_c_id"></span>;</label>
-                <label for="exampleInputEmail1">class name:<span id="s_c_name"></span></label>
-                <label for="exampleInputName2">new class name:</label>
-                <input type="text" class="form-control" id="class_input">
-            </div>
-            <div class="form-group" style="margin-left: -30px;">
-              <div class="col-sm-10">
-                <input type="button" class="btn btn-default" value="提交" onclick="edit_send();">
-                <input type="button" class="btn btn-default" value="cancle" name="edit_class" onclick="cancleModal();">
-              </div>
-            </div>
-        </form>
+    <form class="form-horizontal" style="margin-left: 50px; margin-top: 30px;">
+        <div class="form-group" style="width: 200px;">
+            <label for="exampleInputEmail1">class id:<span id="s_c_id"></span>;</label>
+            <label for="exampleInputEmail1">class name:<span id="s_c_name"></span></label>
+            <label for="exampleInputName2">new class name:</label>
+            <input type="text" class="form-control" id="class_input">
+        </div>
+        <div class="form-group" style="margin-left: -30px;">
+        <div class="col-sm-10">
+            <input type="button" class="btn btn-default" value="提交" onclick="edit_send();">
+            <input type="button" class="btn btn-default" value="cancle" name="edit_class" onclick="cancleModal();">
+        </div>
+        </div>
+    </form>
     </div>
 
-    <script>
-        function showModal(){
-            document.getElementById('shadow').classList.remove('myself-hide')
-            document.getElementById('modal').classList.remove('myself-hide')
-        }
-        $('#cancle_add_class').click(function(){
-            $("#shadow,#modal").addClass("myself-hide")
-        })
-        function cancleModal(){
-            document.getElementById("shadow-edit").classList.add('myself-hide')
-            document.getElementById('modal-edit').classList.add('myself-hide')
-        }
-        function AjaxSend(){
-            $.ajax({
-                url:'/modal_add_class/',
-                type:'POST',
-                data:{
-                    'title':$('#title').val()
-                },
-                success:function(data){
-                    //当服务端处理完成后，返回数据时，该函数自动调用
-                    //data代表服务端返回的值
-                    //服务器先拿到值
-                    if (data =="ok"){
-                        location.href='/class/';
-                    }else{
-                        $('#error').text(data);
-                    }
+{% endblock %}
 
-                }
-            })
-        }
-        function AjaxDelete(obj){
-            var class_id =obj.getAttribute("value")
-            $.ajax({
-                url:'/modal_del_class/',
-                type:'POST',
-                data:{
-                    'class_id':class_id
-                },
-                success:function(data){
-                    if (data =='200'){
-                        location.href ='/class/'
-                    }else{
-                        alert('error delete class id :'+class_id)
-                    }
-                }
-            })
-        }
-        function AjaxEdit(obj){
-            var class_id =obj.getAttribute("value")
-            $.ajax({
-                url:'/modal_edit_class/',
-                type:'GET',
-                data:{
-                    'nid':class_id
-                },
-                success:function(data){
-                    if (data !=''){
-                        document.getElementById('shadow-edit').classList.remove('myself-hide')
-                        document.getElementById('modal-edit').classList.remove('myself-hide')
-                        $('#s_c_id').text(class_id)
-                        $('#s_c_name').text(data)
-                    }else{
-                        alert('error edit id of class:'+class_id)
-                    }
 
-                }
-            })
-        }
-        function edit_send(){
-            var class_id =$('#s_c_id').text();
-            var new_classname =$('#class_input').val();
-            $.ajax({
-                url:'/modal_edit_class/',
-                type:'POST',
-                data:{
-                    'class_id':class_id,
-                    'new_c_name':new_classname,
-                },
-                success:function(data){
-                    if(data != 'ERROR'){
-                        location.href ='/class/'
-                    }else{
-                        alert('error edit for class:'+class_id)
-                    }
-                }
-            })
-        }
-    </script>
-</html>
+
+
