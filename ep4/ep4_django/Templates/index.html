@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+    <head lang="en">
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <ul>
+            {% for user in user_list %}
+                <li>{{user}} <a href="/edit/{{user}}/{{user}}">edit</a></li>
+               <li>{{user}} <a href='{% url "n2" user %}'>edit</a></li>
+            {% endfor %}
+        </ul>
+    </body>
+</html> 
+
+<!-- <li>{{user}} <a href='{% url "n2" user %}'>edit</a></li> -->

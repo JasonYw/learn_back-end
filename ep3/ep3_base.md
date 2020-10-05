@@ -394,7 +394,25 @@
         在浏览器上保存的键值对
         
         def index(request):
-            request.COOKIES.get()
+            request.COOKIES
+            request.get_signed_cookie('k1',salt='')
+            obj =render/HttpResponse/redirect
+            obj.set_cookie(k1,v1,max_age)
+            obj.set_signed_cookie(k1,v1,max_age,salt='')
+
+    4.Bootstrap响应式布局
+        -css
+        -js 欠
+
+    5.后台布局
+        position：absolute 绝对
+                fixed  相对于窗口
+        hovar   .xx:hover .xxxx{
+
+                }
+        
+
+
 
 
 
@@ -432,6 +450,28 @@
 
 
 今日内容：
+    django-admin startproject mysite
+    cd mysite
+    python manage.py startapp app(自定义)
+    django 里面可有多个app
+    因为一个主站 一个后台管理
+    不同业务为一个app
+    app
+        -migrations 数据库相关
+        -admin django提供的后台管理 数据库相关
+        -models 写类 根据类创建数据库表 
+        -tests  做单元测试
+        -views 视图
+    1.路由系统
+        url->函数
+        
+        a./login/ - def login
+        b./add-user/(\d+) -> def add_user(request) 可加正则表达式
+        
+
+
+
+
     1.路由系统
     2.视图函数 CBV，FBV
         FBV 视图基于函数
