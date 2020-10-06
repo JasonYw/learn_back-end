@@ -73,5 +73,131 @@ http://127.0.0.1:8000/index/xxx/
             re_path(r'index/(\d+)',views.index,name="n1")
             reverse('n1',args=(1,)) 生成index/1
 
+    2 ORM操作
+
+        步骤：
+            -创建数据库
+            -setting配置
+              DATABASES ={
+                    'default':{
+                        'ENGINE':'django.db.backends.mysql', #写死的
+                        'NAME':'django', #DATABASE的名字
+                        'USER':'root',
+                        'PASSWORD':'0125',
+                        'HOST':'localhost',
+                        'PORT':'3306',
+                    }
+                }
+            -与setting同目录中的__init__
+                import pymysql
+                pymysql.install_as_MySQLdb()
+
+            -在app中的models文件中创建一个类，类要继承models.Model相当于创建一个表
+                class Userinfo(models.Model):
+                    '''
+                        创建一行表
+                    '''
+                    #自增int
+                    #nid =models.AutoField()
+
+                    #自增长整型 primary_key=True设置主键
+                    #可以不写 django会自动创建一列名为id的主键 int 自增 主键 
+                    id =models.BigAutoField(primary_key=True)  
+
+                    #字符串类型 max_length最大长度为32 CharField必须指定max_length
+                    user=models.CharField(max_length=32)
+
+                    #字符串类型 max_length最大长度64
+                    password =models.CharField(max_length=64)
+
+                    #给旧数据库的时候，添加新列的时候
+                    # 要说明null=True ，也就是可以为空 或 default=1 添加默认值
+                    age =models.IntegerField(default=1) 
+
+                    #添加外键约束，但是要允许空值,在数据库里会生成 ug_id 存的是外键的id
+                    ug =models.ForeignKey('Usergroup',null=True,on_delete=models.CASCADE)
+
+
+                class Usergroup(models.Model):
+                    title =models.CharField(max_length=32)
+
+                
+            -去setting里面注册app
+                在setting中的INSTALLED_APPS中加上app文件夹的名字
+                INSTALLED_APPS = [
+                    'django.contrib.admin',
+                    'django.contrib.auth',
+                    'django.contrib.contenttypes',
+                    'django.contrib.sessions',
+                    'django.contrib.messages',
+                    'django.contrib.staticfiles',
+                    'app'
+                ]
+
+            -创建数据库表，创建于修改都是这两个命令
+                -命令：
+                    python manage.py makemigrations
+                    python manage.py migrate
+
+                每一次执行命令 会读取注册过的app中的类 并在app中的migrations中创建新的配置文件
+                并且migrations中的配置文件会记录所有表的创建及修改记录
+                
+
+    
+
 
             
+
+
+        HTTP请求：
+            url -> 视图（模板+数据）
+
+        ORM操作表
+            -创建表
+            -修改表
+            -删除表
+
+        ORM操作数据行
+            -增删改查
+
+        ORM：没办法直接连接数据库
+        默认：mysql -> mysqlDB（python3中没有)
+            所以要修改django默认连接mysql的方式
+            利用pymysql第三方工具连接数据库
+            django默认会连接sqllite 
+            所以要在setting中设置
+
+
+        setting:
+                DATABASES ={
+                    'default':{
+                        'ENGINE':'django.db.backends.mysql', #写死的
+                        'NAME':'django', #DATABASE的名字
+                        'USER':'root',
+                        'PASSWORD':'0125',
+                        'HOST':'localhost',
+                        'PORT':'3306',
+                    }
+                }
+
+        __init__:
+            import pymysql
+            pymysql.install_as_MySQLdb()
+
+
+作业：
+    学员管理（sql换成orm）
+        新url方式：
+            1.班级的增删改查
+                -传参要用正则表达式
+                /edit-class?nide=1 换成 /edit-class/1.html
+            2.学生管理（涉及到链表，正向反向操作）
+                神奇的双下划线
+
+
+今日内容 CBV FBV 
+    1.CBV FBV
+    2.Django ORM
+    3.分页 
+        -django自带分页功能
+        -自定义的分页

@@ -1,3 +1,5 @@
+# -*-coding:utf-8 -*-
+
 """ep4_django URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -29,6 +31,7 @@ urlpatterns = [
     path('login/',views.login,name="m1"),
     path('index/',views.index,name='n1'),
     re_path('edit/(\w+)/', views.edit,name='n2'),
+    path(r'orm/',views.orm),
 ]
 
 # urlpatterns = [
