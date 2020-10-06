@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from app03 import views
 from app03 import modal_views
 
@@ -47,4 +47,5 @@ urlpatterns = [
     path("modal_del_teacher/",modal_views.del_teacher),
     path("modal_edit_teacher/",modal_views.edit_teacher),
     path("modal_add_1_teacher/",modal_views.add_1_teacehr),
+    path('test/',include('apptest.urls')),
 ]

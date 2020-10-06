@@ -92,6 +92,19 @@ http://127.0.0.1:8000/index/xxx/
                 import pymysql
                 pymysql.install_as_MySQLdb()
 
+
+            -去setting里面注册app
+                在setting中的INSTALLED_APPS中加上app文件夹的名字
+                INSTALLED_APPS = [
+                    'django.contrib.admin',
+                    'django.contrib.auth',
+                    'django.contrib.contenttypes',
+                    'django.contrib.sessions',
+                    'django.contrib.messages',
+                    'django.contrib.staticfiles',
+                    'app'
+                ]
+
             -在app中的models文件中创建一个类，类要继承models.Model相当于创建一个表
                 class Userinfo(models.Model):
                     '''
@@ -121,18 +134,22 @@ http://127.0.0.1:8000/index/xxx/
                 class Usergroup(models.Model):
                     title =models.CharField(max_length=32)
 
+            -常规操作
+                单表增加
+                models.Usergroup.objects.create(title="销售部")
+
+                筛选之后删除
+                models.Usergroup.objects.filter(id=1).delete()
+
+                筛选之后修改
+                models.Usergroup.objects.filter(id=1).update(title='newvalue')
+
+                #查
+                group_list =models.Usergroup.objects.all() 查全部的
+                group_list =models.Usergroup.objects.filter(id=1) 条件查询 若多个条件 则默认为and
+                id__gt=1 表示 id>1 ,id__lt=1 表示id<1
+
                 
-            -去setting里面注册app
-                在setting中的INSTALLED_APPS中加上app文件夹的名字
-                INSTALLED_APPS = [
-                    'django.contrib.admin',
-                    'django.contrib.auth',
-                    'django.contrib.contenttypes',
-                    'django.contrib.sessions',
-                    'django.contrib.messages',
-                    'django.contrib.staticfiles',
-                    'app'
-                ]
 
             -创建数据库表，创建于修改都是这两个命令
                 -命令：
