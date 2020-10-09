@@ -202,6 +202,56 @@ http://127.0.0.1:8000/index/xxx/
             pymysql.install_as_MySQLdb()
 
 
+上节回顾：
+    1.路由系统
+        -静态
+        -动态
+            -对于分组，别名 视图函数的形参必须使用别名名称
+            -无别名有顺序要求
+        -别名
+            -根据名称反向生成url
+        -include
+            -路由分发
+        PS：
+            -有起始符^加终止符$
+            伪静态.html
+        模板语言
+            -.索引
+            -母版
+                3个母版 css js html
+        ORM操作：
+            生成表，默认连接sqllite
+            -修改成mysql
+                settings 修改databases
+                并注册app
+            -pymysql.install_as_mysqldb()
+                连接上数据库
+            -类
+                class newtable(models.Model):
+                    nid =models.AutoField(primary_key =True)
+                    name =models.CharField(max_length =32)
+                class bar(models.Model):
+                    '''
+                        此表有三列
+                        title、f、f_id(外键)
+                    '''
+                    title =...
+                    f =Fk(外键)
+
+            views中对数据库做操作
+            from app import models
+                models.Foo.objects.create(name='ff')
+                models.Foo.objects.all() -> QuerySet -> 一个对象list ->每个对象封装了行的数据
+                models.Foo.objects.filter() ->相当于SELECT * FROM foo WHERE .. -> 拿到依然是QuerySet类型 -> 每个对象封装了行数据
+                models.Foo.objects.filter().first() 表示取一个 ->得到的就是对象而不是QuerySet类型
+                models.Foo.objects.filter().delete()
+                models.Foo.objects.filter().update()
+
+    4.cookie
+        保存在用户浏览器端的键值对
+
+
+
 作业：
     学员管理（sql换成orm）
         新url方式：
@@ -212,9 +262,11 @@ http://127.0.0.1:8000/index/xxx/
                 神奇的双下划线
 
 
-今日内容 CBV FBV 
+今日内容 
     1.CBV FBV
+
     2.Django ORM
+
     3.分页 
         -django自带分页功能
         -自定义的分页
