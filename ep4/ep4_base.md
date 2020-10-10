@@ -266,6 +266,7 @@ http://127.0.0.1:8000/index/xxx/
     1.CBV FBV
 
     2.Django ORM
+        用户类型的表
 
     3.分页 
         -django自带分页功能
