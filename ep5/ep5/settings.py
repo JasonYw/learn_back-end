@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+from getpass import getuser
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -80,17 +80,29 @@ WSGI_APPLICATION = 'ep5.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dj_ep5',
-        'USER': 'root',
-        'PASSWORD': '0125',
-        'HOST':'localhost',
-        'PORT':'3306',
+if getuser() == 'rico':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'learn_orm',
+            'USER': 'root',
+            'PASSWORD': 'rico0125',
+            'HOST':'localhost',
+            'PORT':'3306',
+        }
     }
-}
+else:
+    DATABASES ={
+        'default':{
+            'ENGINE':'django.db.backends.mysql', #写死的 django.db.backends.mysql
+            'NAME':'learn_orm', #DATABASE的名字
+            'USER':'root',
+            'PASSWORD':'0125',
+            'HOST':'localhost',
+            'PORT':'3306',
+        }
+    }
+ 
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
