@@ -95,7 +95,7 @@ else:
     DATABASES ={
         'default':{
             'ENGINE':'django.db.backends.mysql', #写死的 django.db.backends.mysql
-            'NAME':'learn_orm', #DATABASE的名字
+            'NAME':'dj_ep5', #DATABASE的名字
             'USER':'root',
             'PASSWORD':'0125',
             'HOST':'localhost',
