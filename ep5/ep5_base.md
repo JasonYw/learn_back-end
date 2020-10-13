@@ -131,3 +131,81 @@
          
 
         -自定义的分页
+
+上节回顾：
+    1.CBV、FBV
+
+    2.models数据库操作
+     
+            class UserType(models.Model):
+                title =models.CharField(max_length=32)
+                fo =models.ForeignKey('Foo',null=True,on_delete=models.CASCADE)
+
+            class UserInfo(models.Model):
+                name =models.CharField(max_length=16)
+                age =models.IntegerField()
+                ut =models.ForeignKey('UserType',null=True,on_delete=models.CASCADE)
+
+            class Foo(models.Model):
+                caption =models.CharField(max_length=16)
+
+        -跨表
+            正向跨表
+                1.models.UserInfo.objects.all() -> queryset[obj,obj]
+                    q =models.UserInfo.objects.all().first() -> obj
+                    q.ug.title -> 取的时候跨表
+
+                2.models.UserInfo.objects.values('nid','ug_id','ug__title')  -> [dict,dict] 查的时候跨表
+
+                3.models.UserInfo.objects.values_list('nid','ug_id','ug__title') ->[tuple,tuple] 查的时候跨表
+            反向跨表
+                1.q =models.UserGroup.objects.all().first() ->obj
+                    q.userinfo_set.all() ->queryset[obj.obj] --obj为userinfo的对象
+
+                2.q =UserGroup.objects.values('id','title','userinfo')
+                    .values进行跨表时，使用小写的表明即可，没有set！！
+                    q =UserGroup.objects.values('id','title','小写的表名') --默认只取id
+                    q =UserGroup.objects.values('id','title','小写的表名__列名') --可以取指定的列名
+
+                3.q =UserGroup.objects.values_list('id','title','userinfo')
+                    .values_list进行跨表时，使用小写的表明即可，没有set！！
+                    q =UserGroup.objects.values_list('id','title','小写的表名') --默认只取id
+                    q =UserGroup.objects.values_list('id','title','小写的表名__列名') --可以取指定的列名
+                
+        -操作
+            UserInfo.objects.all()
+            UserInfo.objects.filter(id=1.id=2) 默认为and
+            UserInfo.objects.all().first()
+            UserInfo.objects.all().count()
+            UserInfo.objects.all().update()
+            UserInfo.objects.all().delete()
+            UserInfo.objects.all()[n:n1] 切片
+            跨表：
+                正向：
+                    xxx.filter('ut__title'=='超级用户').values('id','name','ut__title')
+                反向：
+                    xxx.filter('表名小写__title'=='超级用户').values('id','name','ut__title')
+
+
+
+
+
+
+
+
+    3.分页组件
+        -内置
+        -自定义
+
+今日任务：
+    1.django orm models操作
+    
+    2.xss攻击
+
+    3.CSRF跨站请求伪造
+
+    4.模板引擎
+        部分方法
+        自定义方法
+
+    
