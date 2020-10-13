@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('test/',views.test),
     path('login.html',views.login.as_view()), #cbv 加 as_view()
-    path('index.html',views.index)
+    path('index.html',views.index),
+    path('custom.html',views.custom),
 ]
  

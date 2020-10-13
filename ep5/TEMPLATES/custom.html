@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+    <head lang="en">
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <ul>
+            {% for row in userlist %} 
+                <li>{{row.name}}</li>
+            {% endfor %}
+        </ul>
+        {{ page_info.pager|safe }}
+    </body>
+    <div>
+        <!-- {% if posts.has_previous %}
+            <a href="/index.html?page={{posts.previous_page_number}}">behind</a>
+        {% endif %}
+
+        {% for i in posts.paginator.page_range %}
+            <a href="/index.html?page={{i}}">{{i}}</a>
+        {% endfor %}
+        
+        {% if posts.has_next %}
+            <a href="/index.html?page={{posts.next_page_number}}">next</a>
+        {% endif %} -->
+    </div>
+</html>

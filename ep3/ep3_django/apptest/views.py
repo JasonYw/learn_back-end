@@ -3,6 +3,11 @@ from django.shortcuts import HttpResponse
 from django.shortcuts import  redirect
 from apptest import models
 
+
+def test(request):
+    models.classes.objects.create(title="class1")
+    models.classes.objects.create(title="class2")
+    return HttpResponse('200')
 # Create your views here.
 def classes(request):
     class_list_1 =models.classes.objects.all()
@@ -66,6 +71,7 @@ def del_student(requset,nid):
 def edit_student(request,nid):
     if request.method =="GET":
         class_list_1 =models.classes.objects.all()
+       
         student_ =models.student.objects.filter(id=nid)
         student =(student_[0].id,student_[0].name,student_[0].class_id)
         class_list =[]

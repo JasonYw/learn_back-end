@@ -160,6 +160,10 @@ class login(View):
     
 
 def index(request):
+    # for i in range(300):
+    #     models.UserInfo.objects.create(name="name"+str(i),age=18,ut_id="1")
+    # return HttpResponse('200')
+
     '''
     分页
     '''
@@ -194,3 +198,70 @@ def index(request):
     '''
 
     return render(request,'index.html',{'posts':posts})
+
+class PageInfo(object):
+    def __init__(self,current_page,per_page,all_conut,show_page=11):
+        self.per_page =per_page
+        self.all_conut =all_conut
+        self.show_page =show_page
+        self.all_pager,b =divmod(self.all_conut,self.per_page)
+        if b:
+            self.all_pager =self.all_pager+1 
+        try:
+            self.current_page =int(current_page)
+            if self.current_page<= 0 or self.current_page>self.all_pager:
+                raise ArithmeticError
+        except:
+            self.current_page =1
+        
+    def start(self):
+        return (self.current_page-1)*self.per_page
+
+    def end(self):
+        return self.current_page*self.per_page
+    
+    def pager(self):
+        pager_list =[]
+        begin =self.current_page -int((self.show_page-1)/2)
+        stop =self.current_page +int((self.show_page-1)/2) +1
+        if self.all_pager <= self.show_page:
+            begin =1
+            stop=self.all_pager+1
+        else:
+            if begin <=0 or stop <=0:
+                begin =1
+                stop =11
+            if begin > self.all_pager or stop > self.all_pager:
+                begin =self.all_pager-10
+                stop =self.all_pager+1
+        
+        prev='<a style="display:inline-block;padding:5px;margin:5px;color:red;" href="/custom.html?page=%s">上一页</a>'%(self.current_page-1)
+        pager_list.append(prev)
+        for page in range(begin,stop):
+            if int(page) == self.current_page:
+                pager_list.append(f'<a style="display:inline-block;padding:5px;margin:5px;color:red;" href="/custom.html?page={page}">{page}</a>')
+            else:
+                pager_list.append(f'<a style="display:inline-block;padding:5px;margin:5px;color:black;" href="/custom.html?page={page}">{page}</a>')
+        next_page ='<a style="display:inline-block;padding:5px;margin:5px;color:red;" href="/custom.html?page=%s">下一页</a>'%(self.current_page+1)
+        pager_list.append(next_page)
+        return ''.join(pager_list)
+
+
+    
+
+
+def custom(request):
+    #表示用户当前想要访问的页码 8
+    current_page =int(request.GET.get('page'))
+    #每页显示数据的个数
+    per_page =10 
+
+    #总个数
+    num_userinfo =models.UserInfo.objects.all().count()
+    # num_userinfo =models.UserInfo.objects.filter(id__lt=22).count()
+
+    page_info =PageInfo(current_page,per_page,num_userinfo )
+    userlist =models.UserInfo.objects.all()[page_info.start():page_info.end()]
+    return render(request,'custom.html',{'userlist':userlist,'page_info':page_info})
+
+    

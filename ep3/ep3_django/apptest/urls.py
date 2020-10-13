@@ -28,5 +28,6 @@ urlpatterns = [
     path('add_student/',views.add_student),
     re_path(r'del_student/(\d+).html',views.del_student),
     re_path(r'edit_student/(\d+).html',views.edit_student),
+    # path('test/',views.test),
 ]
 

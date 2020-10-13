@@ -85,7 +85,7 @@ if getuser() == 'rico':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'learn_orm',
+            'NAME': 'dj_ep3',
             'USER': 'root',
             'PASSWORD': 'rico0125',
             'HOST':'localhost',
