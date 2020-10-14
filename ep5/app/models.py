@@ -16,5 +16,9 @@ class UserInfo(models.Model):
     age =models.IntegerField()
     ut =models.ForeignKey('UserType',null=True,on_delete=models.CASCADE)
 
+
+    def __str__(self):
+        return "%s-%s" %(self.id,self.name)
+
 class Foo(models.Model):
     caption =models.CharField(max_length=16)

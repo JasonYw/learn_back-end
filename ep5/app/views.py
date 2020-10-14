@@ -5,6 +5,7 @@ from django.views import View
 from app import models
 from django.core.paginator import Paginator,Page,PageNotAnInteger,EmptyPage
 from utils.pager import PageInfo
+from django.db.models import Count,Sum,Max,Min
     
  
 
@@ -147,6 +148,118 @@ def test(request):
         反向：是以usertype为准
    
     '''
+    #排序
+    #正向按照id排序，order_by("id") 反向按照id排序 order_by("-id")
+    #若id重复了，则按照name排序
+    #obj =models.UserInfo.objects.all().order_by('-id','name')
+
+    #分组
+    #from django.db.models import Count,Sum,Max,Min
+    #.query 生成sql语句
+    #annotate 写聚合条件
+    #xx为别名
+    #v =models.UserInfo.objects.values('ut_id').annotate(xx=Count('id')) 
+    #SELECT `app_userinfo`.`ut_id`, COUNT(`app_userinfo`.`id`) AS `xx` FROM `app_userinfo` GROUP BY `app_userinfo`.`ut_id` ORDER BY NULL
+
+
+    #分组之后2次筛选,filter在annotate相当于sql中的HAVING
+    #v =models.UserInfo.objects.values("ut_id").annotate(xx=Count("id")).filter(xx__gt=2)
+    #SELECT `app_userinfo`.`ut_id`, COUNT(`app_userinfo`.`id`) AS `xx` FROM `app_userinfo` GROUP BY `app_userinfo`.`ut_id` HAVING COUNT(`app_userinfo`.`id`) > 2 ORDER BY NULL
+    #filter在annotate相当于sql中的WHERE
+    #v =models.UserInfo.objects.values("ut_id").filter(id__gt =2).annotate(xx=Count("id")).filter(xx__gt=2)
+    #SELECT `app_userinfo`.`ut_id`, COUNT(`app_userinfo`.`id`) AS `xx` FROM `app_userinfo` WHERE `app_userinfo`.`id` > 2 GROUP BY `app_userinfo`.`ut_id` HAVING COUNT(`app_userinfo`.`id`) > 2 ORDER BY NULL
+
+    #基本操作
+    # models.UserInfo.objects.filter(id__gt =1) #id>1
+    # models.UserInfo.objects.filter(id__lt =1) #id<1
+    # models.UserInfo.objects.filter(id__lte=1) #id<=1
+    # models.Userinfo.objects.filter(id__gte=1) #id>=1
+    # models.UserInfo.objects.filter(id__in=[1,2,3]) #id在[1,2,3]中
+    # models.UserInfo.objects.filter(id__range=[1,3]) #bewtwen and
+    # models.UserInfo.objects.filter(name__startswith='')
+    # models.UserInfo.objects.filter(name__endswith='')
+    # models.UserInfo.objects.filter(name__contains='')
+    # models.UserInfo.objects.filter(id=1) #id=1
+    # models.UserInfo.objects.exclude(id=1) #id!=1
+
+    '''
+    #F Q EXTRA
+    from django.db.models import F
+    #F获取原来的值
+    models.UserInfo.objects.all().update(age=F("age")+1)
+
+    #Q
+    #Q使用有两种方式：对象方式，以方法的方式
+    models.UserInfo.objects.filter(id=1,name="root") 
+    #等效于
+    condition={
+        'id':1,
+        'name':'root',
+    }
+    models.UserInfo.objects.filter(**condition)
+
+    from django.db.models import Q
+    #等效于
+    #一个Q代表一个条件
+    #第一种写法
+    models.UserInfo.objects.filter(Q(id=1) | Q(name='alex'))
+    models.UserInfo.objects.filter(Q(id=1) & Q(name='alex'))
+
+    
+    #第二种
+    #(c1=1 or c1=10 or c1=9)
+    q1 =Q()
+    q1.connector ="OR"
+    q1.children.append(('c1',1))
+    q1.children.append(('c1',10))
+    q1.children.append(('c1',9))
+
+    #id=1 or id=2 or id=9 
+    q2 =Q()
+    q2.connector ="OR"
+    q2.children.append(('id',1))
+    q2.children.append(('id',2))
+    q2.children.append(('id',9))
+
+    #q1 and q2
+    con =Q()
+    con.add(q1,'AND')
+    con.add(q2,'AND')
+  
+
+    #id=1 and id=10
+    q3 =Q()
+    q3.connector ='AND'
+    q3.children.append(('id',1))
+    q3.children.append(('id',10))
+
+    #q2最后一个元素 or q3,q3在q2内部
+    q2.add(q3,'OR') 
+
+    #上述相当于
+    (id=1 or id=2 or id=9 or (id=1 and id=10)) and (c1=1 or c1=10 or c1=9)
+
+
+    #动态生成
+    condition_dict ={
+        'k1':[1,2,3,4],
+        'k2':[1,],
+        'k3':[11,]
+    }
+    con =Q()
+    for k,v in condition_dict.items():
+        q =Q()
+        q.connector ='OR'
+        for i in v:
+            q.children.add('id',i)
+        con.add(q,'AND')
+
+    models.UserInfo.objects.filter(con)
+    '''
+
+
+
+    #select ut_id from userinfo
     # result =models.UserInfo.objects.all().values('id','name','ut__title')
     # for item in result:
     #     print(item)
