@@ -1,13 +1,10 @@
-from django.shortcuts import render
-from django.shortcuts import HttpResponse
-from django.shortcuts import redirect
+from django.core.paginator import EmptyPage, Page, PageNotAnInteger, Paginator
+from django.db.models import Count, Max, Min, Sum
+from django.shortcuts import HttpResponse, redirect, render
 from django.views import View
-from app import models
-from django.core.paginator import Paginator,Page,PageNotAnInteger,EmptyPage
 from utils.pager import PageInfo
-from django.db.models import Count,Sum,Max,Min
-    
- 
+from app import models
+
 
 # Create your views here.
 def test(request):
@@ -256,6 +253,44 @@ def test(request):
 
     models.UserInfo.objects.filter(con)
     '''
+
+    print('------------------------------------')
+
+    #extra
+    # v =models.UserInfo.objects.all().extra(select={'n':'select count(1) from app_usertype'})
+    # v =models.UserInfo.objects.all().extra(
+    #     select={
+    #         'n':'select count(1) from app_usertype where id =%s and id =%s',
+    #         'm':'select count(1) from app_usertype where id =%s',
+    #         },
+    #         select_params=[1,2,3,])
+    #相当于
+    # select
+    #     id,
+    #     name,
+    #     (select count(1) from tb) as n
+    #     from xb
+    #where
+    # for obj in v:
+    #     print(obj.name,obj.id,obj.n,obj.m)
+    # models.UserInfo.objects.extra(
+    #     where=['id=1 or id=2','name=%s'], #(id=1 or id=2)and name=alex
+    #     params=['alex',]
+    # )   
+    # models.UserInfo.objects.extra(
+    #     tables=['app_usertype'],
+    #     where=['app_usertype.id =app_userinfo.ut_id']
+    # )
+    # # 相当于select * from app_userinfo,app_usertype where app_usertype.id =app_userinfo.id
+
+    v =models.UserInfo.objects.filter(id__gt=1).extra(
+        where=['app_userinfo.id<%s'],
+        params=[100,],
+        tables=['app_usertype'],
+        order_by=['-app_userinfo.id'],
+        select={'uid':1}
+    )
+    print(v.query)
 
 
 

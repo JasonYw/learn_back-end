@@ -186,6 +186,8 @@
                 反向：
                     xxx.filter('表名小写__title'=='超级用户').values('id','name','ut__title')
 
+        
+
 
 
 
@@ -305,9 +307,65 @@
 
                         models.UserInfo.objects.filter(con)
 
+            extra 是对额外的查询条件以及相关表，排序
+                models.Userinfo.objects.extra(self,select=none,where=none,params=none,tables=none,order_by=none,select_params=none)
+                #a.映射
+                    #select selecr_params       -> select 此处 from
+                    models.UserInfo.objects.all().extra(select={'n':'select count(1) from app_usertype'})
+                    ->select
+                        id,
+                        name,
+                        (select count(1) from tb) as n
+                        from xb
 
-    
+                #b.条件
+                    #where  params              ->select * from table where 此处
+                    models.UserInfo.objects.extra(
+                        where=['id=1 or id=2','name=%s'], #(id=1 or id=2)and name=alex
+                        params=['alex',]
+                    )
+                    ->select * from app_userinfo where (id=1 or id=2) and name='alex'   
 
+                #c.表
+                    #tables select *            ->from table，此处   
+                    models.UserInfo.objects.extra(
+                        tables=['app_usertype'],
+                        where=['app_usertype.id =app_userinfo.ut_id']
+                    )
+                    ->select * from app_userinfo,app_usertype where app_usertype.id =app_userinfo.id
+
+                #d.排序
+                    #order_by                   ->select * from table order by 此处
+
+                all:
+                    models.UserInfo.objects.extra(
+                        select={'newid':'select count(1) from app_usertype where id>%s},
+                        select_params=[1,],
+                        where =['age>%s'],
+                        params=[18,]
+                        order_by=['-age']
+                        tables=['app_usertype']
+                    )
+                    ->  select 
+                        app_userinfo.id,(select count(1) from app_usertype where id>1) as newid
+                        from app_userinfo,app_usertype
+                        where app_userinfo.age >18
+                        orderby app_userinfo.age desc 
+
+                对于很复杂的sql语句依然直接使用sql语句
+
+            原生sql语句
+                from django.db import connection,connections
+
+                1.cursor =connection,cursor() == cursor =connections['default'].cursor()
+
+                2.cursor =connections['default'].cursor() #因为django支持多种数据库，第二种方法可选择数据库，default 对应的是setting文件中DATABASE配置中的default
+
+                接下来与pymysql一模一样
+                    cursor.execute(原生sql语句)
+                    cursor.fetchall()
+                    
+                
     
     2.xss攻击
 
