@@ -305,6 +305,17 @@
 
                         models.UserInfo.objects.filter(con)
 
+            9.简单的操作
+                数据源
+                    models.UserInfo.objects.values('nid').distinct()
+                    SELECT DISTINCT nid from app_userinfo
+                PostgreSQL/MYSQL/SQL
+                    models.UserInfo.objects.distinct('nid')
+                    SELECT DISTINCT nid from app_userinfo
+                    
+
+
+
 
     
 

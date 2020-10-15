@@ -263,7 +263,81 @@ def test(request):
     # result =models.UserInfo.objects.all().values('id','name','ut__title')
     # for item in result:
     #     print(item)
-   
+
+    # v =models.UserInfo.objects.all().order_by('-id','name')
+    # print(v)
+    # v =models.UserInfo.objects.all().order_by('-id','name').reverse()
+    # print(v)
+    v =models.UserInfo.objects.all()
+    #[obj]
+    v =models.UserInfo.objects.all().only('id','name') #能写only尽量写only
+    #[obj.id/obj.name]
+    models.UserInfo.objects.values('id','name')
+    #[id,name]
+    v =models.UserInfo.objects.all().defer('name')
+    #[obj.age] #拿到除了name以外的数据
+    #v =mdoels.UserInfo.objects.all().using('指定的数据库')
+    #models.UserInfo.objects.all().filter().all().exclude().only().defer()  
+
+
+    #year 年-01-01
+    #month 年-月-01
+    #day:年-月-日
+    #models.表.objects.dates('列','day','DESC') 先格式化在排序
+
+    #kind只能是year month day hour minute second
+    #tzinfo 时区
+    #转换时区
+    #需要pytz模块 pip install pytz
+    # import pytz
+    # pytz.all_timezones
+    # pytz.timezone('Asia/Shanghai')
+    #models.表.objects.datetimes('列',kind='',tzinfo='Asia/Shanghai') 
+
+
+    #aggregate 也是聚合但是不分组
+    #先对ut_id列去重，在计算ut_id的数量
+    #v =models.UserInfo.objects.aggregate(k=Count('ut_id',distinct=True),n=Count('id')) 
+    #v -> 字典
+
+    #models.UserInfo.objects.get() -> models.UserInfo.object.all().first()
+    #不建议用get 会报错
+
+    #v =models.UserType.objects.create(title='xxx') ==  v=models.UserType.objects.create(**{'title':'xxx'})
+    #v 为新增数据
+    #obj =models.UserType(title='xxx')
+    #obj.save()
+    #相当于models.UserType.objects.create(title='xxx')
+
+    #批量创建
+    # objs =[
+    #     models.UserInfo(name='r11'),
+    #     models.UserInfo(name='r12'),
+    # ]
+    # models.UserInfo.objects.bulk_create(objs,10)  #10代表每提交10个对象commit一次
+
+
+    #如果有则获取，若没有则创建
+    #先到表里进行查询roo1，defaults表示要添加的东西
+    #若获取到，obj为对象
+    #查询条件可以添加
+    #created 为布尔值 表示是否增加了
+    #obj,created =models.UserInfo.objects.get_or_create(username='root1',defaults={'email':'111111','u_id':2,'t_id':2})
+    #若存在就更新，否则创建
+    #obj,created =models.UserInfo.objects.update_or_create(username='root1',defaults={'email':'111111','u_id':2,'t_id':2})
+
+    #主键查询
+    #models.UserInfo.objects.in_bulk([1,2,3]) == models.UserInfo.objects.filter(id__in=[1,2,3])
+
+    #原生sql
+    #extra()
+    #v =models.UserInfo.objects.raw('原生sql')
+    #v ->[obj,obj,obj] obj为userinfo的对象
+
+
+
+      
+
     return HttpResponse('200')
 
 
