@@ -307,6 +307,7 @@
 
                         models.UserInfo.objects.filter(con)
 
+
             extra 是对额外的查询条件以及相关表，排序
                 models.Userinfo.objects.extra(self,select=none,where=none,params=none,tables=none,order_by=none,select_params=none)
                 #a.映射
@@ -366,6 +367,22 @@
                     cursor.fetchall()
                     
                 
+
+            9.简单的操作
+                数据源
+                    models.UserInfo.objects.values('nid').distinct()
+                    SELECT DISTINCT nid from app_userinfo
+                PostgreSQL/MYSQL/SQL
+                    models.UserInfo.objects.distinct('nid')
+                    SELECT DISTINCT nid from app_userinfo
+                    
+
+
+
+
+    
+
+
     
     2.xss攻击
 
