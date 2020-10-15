@@ -23,5 +23,7 @@ urlpatterns = [
     path('login.html',views.login.as_view()), #cbv 加 as_view()
     path('index.html',views.index),
     path('custom.html',views.custom),
+    path('comment/',views.learn_xss),
+    path('xss/',views.xss),
 ]
  

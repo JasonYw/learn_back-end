@@ -299,6 +299,10 @@ def test(request):
     # for item in result:
     #     print(item)
 
+
+
+
+
     # v =models.UserInfo.objects.all().order_by('-id','name')
     # print(v)
     # v =models.UserInfo.objects.all().order_by('-id','name').reverse()
@@ -370,8 +374,6 @@ def test(request):
     #v ->[obj,obj,obj] obj为userinfo的对象
 
 
-
-      
 
     return HttpResponse('200')
 
@@ -455,4 +457,24 @@ def custom(request):
     userlist =models.UserInfo.objects.all()[page_info.start():page_info.end()]
     return render(request,'custom.html',{'userlist':userlist,'page_info':page_info})
 
-    
+
+
+
+#learn xss攻击
+msg =[]
+def learn_xss(request):
+    if request.method =="GET":
+        from django.utils.safestring import mark_safe
+        a ='<a href="https://www.baidu.com">baidu</a>'
+        a =mark_safe(a)
+        return render(request,'comment.html',{'baidu':a}) #前端需要加safe或者使用mark_safe标记
+    else:
+        v =request.POST.get('content')
+        if "script" in v:
+            return render(request,'comment.html',{'msg':"error"})
+        msg.append(v)
+        print(msg)
+        return render(request,'comment.html')
+
+def xss(request):
+    return render(request,'xss.html',{'msg':msg})
