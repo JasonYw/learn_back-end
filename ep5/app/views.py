@@ -335,6 +335,26 @@ def test(request):
     #v ->[obj,obj,obj] obj为userinfo的对象
 
 
+    #在第一次查询时主动做联表
+    # q =models.UserInfo.objects.all().select_related('gt','ut')
+    # #->SELECT * from userinfo inner join usertype on ...
+    # for row in q:
+    #     print(row.name,row.gt.caption,row.ut.titile)
+
+    #不做联表，做多次查询
+    #prefetch_related 
+    q =models.UserInfo.objects.all().prefetch_related('ut')
+    #select * from userinfo ->结果集
+    #django内部把所有的 ut_id =[2,4]
+    #select * from usertype where id in [2,4] ->结果集
+    for row in q :
+        print(row.id,row.ut.title)
+
+    #上述俩个操作比普通跨表效率高
+    #有外键 当数据表的数据量少，则用主动联表，select_related
+    #数据量多，查询频繁 用prefetch_related
+
+    
 
       
 

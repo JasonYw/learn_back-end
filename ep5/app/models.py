@@ -15,6 +15,7 @@ class UserInfo(models.Model):
     name =models.CharField(max_length=16)
     age =models.IntegerField()
     ut =models.ForeignKey('UserType',null=True,on_delete=models.CASCADE)
+    gt =models.ForeignKey('group',null=True,on_delete=models.CASCADE)
 
 
     def __str__(self):
@@ -22,3 +23,6 @@ class UserInfo(models.Model):
 
 class Foo(models.Model):
     caption =models.CharField(max_length=16)
+
+class Group(models.Model):
+    caption =models.CharField(max_length=32)
