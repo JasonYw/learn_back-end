@@ -186,6 +186,8 @@
                 反向：
                     xxx.filter('表名小写__title'=='超级用户').values('id','name','ut__title')
 
+        
+
 
 
 
@@ -305,6 +307,67 @@
 
                         models.UserInfo.objects.filter(con)
 
+
+            extra 是对额外的查询条件以及相关表，排序
+                models.Userinfo.objects.extra(self,select=none,where=none,params=none,tables=none,order_by=none,select_params=none)
+                #a.映射
+                    #select selecr_params       -> select 此处 from
+                    models.UserInfo.objects.all().extra(select={'n':'select count(1) from app_usertype'})
+                    ->select
+                        id,
+                        name,
+                        (select count(1) from tb) as n
+                        from xb
+
+                #b.条件
+                    #where  params              ->select * from table where 此处
+                    models.UserInfo.objects.extra(
+                        where=['id=1 or id=2','name=%s'], #(id=1 or id=2)and name=alex
+                        params=['alex',]
+                    )
+                    ->select * from app_userinfo where (id=1 or id=2) and name='alex'   
+
+                #c.表
+                    #tables select *            ->from table，此处   
+                    models.UserInfo.objects.extra(
+                        tables=['app_usertype'],
+                        where=['app_usertype.id =app_userinfo.ut_id']
+                    )
+                    ->select * from app_userinfo,app_usertype where app_usertype.id =app_userinfo.id
+
+                #d.排序
+                    #order_by                   ->select * from table order by 此处
+
+                all:
+                    models.UserInfo.objects.extra(
+                        select={'newid':'select count(1) from app_usertype where id>%s},
+                        select_params=[1,],
+                        where =['age>%s'],
+                        params=[18,]
+                        order_by=['-age']
+                        tables=['app_usertype']
+                    )
+                    ->  select 
+                        app_userinfo.id,(select count(1) from app_usertype where id>1) as newid
+                        from app_userinfo,app_usertype
+                        where app_userinfo.age >18
+                        orderby app_userinfo.age desc 
+
+                对于很复杂的sql语句依然直接使用sql语句
+
+            原生sql语句
+                from django.db import connection,connections
+
+                1.cursor =connection,cursor() == cursor =connections['default'].cursor()
+
+                2.cursor =connections['default'].cursor() #因为django支持多种数据库，第二种方法可选择数据库，default 对应的是setting文件中DATABASE配置中的default
+
+                接下来与pymysql一模一样
+                    cursor.execute(原生sql语句)
+                    cursor.fetchall()
+                    
+                
+
             9.简单的操作
                 数据源
                     models.UserInfo.objects.values('nid').distinct()
@@ -312,20 +375,166 @@
                 PostgreSQL/MYSQL/SQL
                     models.UserInfo.objects.distinct('nid')
                     SELECT DISTINCT nid from app_userinfo
-                    
+                反向查表
+                    v =models.UserInfo.objects.all().order_by('-id','name') 
+                    -> select * from app_userinfo orderby id DESC,name
+                
+                    v =models.UserInfo.objects.all().order_by('-id','name').reverse()
+                    -> select * from app_userinfo order by id,name DESC
+
+                only与defer与using
+                    v =models.UserInfo.objects.all()
+                    #[obj]
+                    v =models.UserInfo.objects.all().only('id','name') #能写only尽量写only
+                    #[obj.id/obj.name]
+                    models.UserInfo.objects.values('id','name')
+                    #[id,name]
+                    v =models.UserInfo.objects.all().defer('name')
+                    #[obj.age] #拿到除了name以外的数据
+                    #v =mdoels.UserInfo.objects.all().using('指定的数据库')
+                    #models.UserInfo.objects.all().filter().all().exclude().only().defer()  
+                
+                日期处理
+                    #year 年-01-01
+                    #month 年-月-01
+                    #day:年-月-日
+                    #models.表.objects.dates('列','day','DESC') 先格式化在排序
+
+                    #kind只能是year month day hour minute second
+                    #tzinfo 时区
+                    #转换时区
+                    #需要pytz模块 pip install pytz
+                    # import pytz
+                    # pytz.all_timezones
+                    # pytz.timezone('Asia/Shanghai')
+                    #models.表.objects.datetimes('列',kind='',tzinfo='Asia/Shanghai') 
 
 
+                聚合不分组
+                    #aggregate 也是聚合但是不分组
+                    #先对ut_id列去重，在计算ut_id的数量
+                    #v =models.UserInfo.objects.aggregate(k=Count('ut_id',distinct=True),n=Count('id')) 
+                    #v -> 字典
+                
+                get
+                    #models.UserInfo.objects.get() -> models.UserInfo.object.all().first()
+                    #不建议用get 会报错
+                
+                创建
+                    #v =models.UserType.objects.create(title='xxx') ==  v=models.UserType.objects.create(**{'title':'xxx'})
+                    #v 为新增数据
+                    #obj =models.UserType(title='xxx')
+                    #obj.save()
+                    #相当于models.UserType.objects.create(title='xxx')
 
+                批量创建
+                    # objs =[
+                    #     models.UserInfo(name='r11'),
+                    #     models.UserInfo(name='r12'),
+                    # ]
+                    # models.UserInfo.objects.bulk_create(objs,10)  #10代表每提交10个对象commit一次
+                
+                如果有则获取，若没有则创建
+                    #先到表里进行查询roo1，defaults表示要添加的东西
+                    #若获取到，obj为对象
+                    #查询条件可以添加
+                    #created 为布尔值 表示是否增加了
+                    #obj,created =models.UserInfo.objects.get_or_create(username='root1',defaults={'email':'111111','u_id':2,'t_id':2})
 
-    
+                若存在就更新，否则创建
+                    #obj,created =models.UserInfo.objects.update_or_create(username='root1',defaults={'email':'111111','u_id':2,'t_id':2})
 
-    
+                主键查询
+                    #models.UserInfo.objects.in_bulk([1,2,3]) == models.UserInfo.objects.filter(id__in=[1,2,3])
+                
+                原生sql
+                    #extra()
+                    #v =models.UserInfo.objects.raw('原生sql')
+                    #v ->[obj,obj,obj] obj为userinfo的对象
+
     2.xss攻击
-
+        -前端慎用safe与mark_safe
+        -用的时候需要在渲染前过滤关键字
+        
     3.CSRF跨站请求伪造
 
     4.模板引擎
         部分方法
         自定义方法
 
+上节回顾
+    -数据库的操作
+        -models.TABLE.objects.create(title="xx")
+        -filter(id=1,name='ff')
+        -filter(id=1,name='ff').update()
+        -filter(id=1,name='ff').delete()
+        -.all()
+        -.values() ->[{},{},{}]
+        -.count()
+        -values_list() ->[(),(),()]
+        -values_list() #小写的表名__
+        -bulk_create(obj_list,commit的数据量)
+        -q =models.xx.objects.all().only('id') ->[obj,obj]
+        -F,更新数据
+        -Q，做and或者or，加到filter做条件
+        -filter()与annotate
+        -order_by().reverse()
+        -extra
+            -select={x:'1'} select 1 as x from TABLE
+            -params
+            -select_params
+            -tables=['x',]
+            -where
+            -order_by
+        -filter(id__range=[1,3])
+        -exclude
+        -existe
+        -annotate 与 values 做group by
+        -.raw()
+        -aggregate 聚合整张表
+        -filter(id__gt)
+        -filter(id__lt)
+        -filter(id__gte)
+        -filter(id__lte)
+        -filter(id__in=[x,n])
+        .first()
+        .get()
+        -last()
+        -only()
+        -defer()
+        -connection 或者 connections
+        -max() min() sum() avg() 聚合
+        -makemigrations
+        -migrate
+        -reverse()
+        -destinct()
+        -dates 日期处理
+        -get_or_create
+        -update_or_create
+        -filter(age__isnull=True)
+        -using
+
+        #若表内容多，推荐使用字典的方式
+            create(name='xx',age='xx')
+            dict={"name":"xx","age":"xx"}
+            create(**dict)
+
+        #更新
+            models.xx.objects.filter(id=1).update(a=1,b=2)
+            models.xx.objects.filter(id=1).update(**dic)
+
+        #查询
+            models.xx.objects.filter(id=1,xxx)
+            models.xx.objects.filter(**dict)
+        
+        FORM 组件可以实现
+            -django 把数据转换成字典 
+            -对用户发来的数据进行验证
+            
+
+
+        
+
+
+    -xss攻击
     
