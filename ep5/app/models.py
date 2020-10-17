@@ -51,6 +51,19 @@ class love(models.Model):  #->>此表可以自动生成
             ('b','g')
         ]
 
+class test(models.Model):
+    #本质都是字符串
+    #但是对这些列操作时，django会进行正则表达式的验证
+    #只有验证通过之后才可以进行入库
+    email =models.EmailField()
+    ip =models.IPAddressField()
+    slug =models.SlugField()
+    uuid =models.UUIDField()
+    filepath =models.FilePathField()
+    file =models.FieldFile()
+    image =models.ImageField()
+    
+
 
 
 

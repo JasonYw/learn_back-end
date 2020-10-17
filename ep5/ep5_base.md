@@ -729,8 +729,34 @@
 
 上节回顾
 
-        
+    数据库操作：
+        -app
+            -models.py
+                class foo(models.Model):
+                    email =models.EmailField()
+                    ip =models.IPAddressField()
+                    slug =models.SlugField()
+                    uuid =models.UUIDField()
+                    filepath =models.FilePathField()
+                    file =models.FieldFile()
+                    image =models.ImageField()
+                    以上本质上都是字符串
 
 
-    -xss攻击
+    csrf：
+        post的时,需要用户携带随机字符串csrf_tocken
+        -form表单携带{% csrf_tocken %}
+        -ajex
+            -从form里取放在ajex中的formdata中
+            -利用$.cookie从cookie中取csrf_token，放在headers中
+    xss：
+        -不要用safe
+        -在后台使用mark_safe
+        -过滤关键字
+    cookie：
+        -保存在客户端浏览器中的键值对
+        -放在用户浏览器端的键值对
+        -可以放很多，对于敏感信息不能放在cookie中
+
+
     
