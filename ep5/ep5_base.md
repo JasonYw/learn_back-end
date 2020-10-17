@@ -452,6 +452,115 @@
                     #v =models.UserInfo.objects.raw('原生sql')
                     #v ->[obj,obj,obj] obj为userinfo的对象
 
+
+                在第一次查询时主动做联表
+                    # q =models.UserInfo.objects.all().select_related('gt','ut')
+                    # #->SELECT * from userinfo inner join usertype on ...
+                    # for row in q:
+                    #     print(row.name,row.gt.caption,row.ut.titile)
+
+                不做联表，做多次查询
+                    #prefetch_related 
+                    #q =models.UserInfo.objects.all().prefetch_related('ut')
+                    #select * from userinfo ->结果集
+                    #django内部把所有的 ut_id =[2,4]
+                    #select * from usertype where id in [2,4] ->结果集
+                    # for row in q :
+                    #     print(row.id,row.ut.title)
+
+                #上述俩个操作比普通跨表效率高
+                #有外键 当数据表的数据量少，则用主动联表，select_related
+                #数据量多，查询频繁 用prefetch_related
+
+                多对多
+
+                    建表
+                    class Boy(models.Model):
+                        name =models.CharField(max_length=32)
+                        m =models.ManyToManyField('Girl',through="love",through_fields=('b','g')) #也可以写在Girl表中，并且不会往boy里添加任何列，会新建一个表表名为app_boy_m
+                        #会新建一个表表名为app_boy_m,表明里有三个列，id，boy_id,girl_id
+                        #无法直接对第三张表进行操作，间接对m操作
+                        #若自定义了love表l，又保留了ManyToMany，则django会建立四张表，boy girl love 以及app_boy_m
+                        #为了避免上述情况发生，给ManyTomany方法加入一个through告诉django 通过自定义的love来创建第三张表
+                        #through 通过love来联，throungh_fields 通过b和g来做关联列
+    
+
+                    class Girl(models.Model):
+                        name =models.CharField(max_length=32)
+                        #m =models.ManyToManyField('Boy')
+
+                    class love(models.Model):  #->>此表可以自动生成
+                        b =models.ForeignKey('Boy',on_delete=models.CASCADE)
+                        g =models.ForeignKey('Girl',on_delete=models.CASCADE)
+
+                        class Meta: #联合索引
+                            unique_together=[
+                                ('b','g')
+                            ]
+
+                    -第一种
+                    和leo有关系的姑娘
+                        # obj =models.Boy.objects.filter(name="leo").first()
+                        # print(obj.name)
+                        # love_list =obj.love_set.all()
+                        # print(love_list)
+                        # for row in love_list:
+                        #     print(row.g.name)
+                    第二种
+                        # lovelist =models.love.objects.filter(b__name='leo')
+                        # for row in lovelist:
+                        #     print(row.g.name)
+                    第3三种 ->好方法
+                        # lovelist =models.love.objects.filter(b__name='leo').values('g__name')
+                        # for row in lovelist:
+                        #     print(row['g__name'])
+                    第四种 ->好方法
+                        # lovelist =models.love.objects.filter(b__name="leo").select_related('g')
+                        # for obj in lovelist:
+                        #     print(obj.g.name)
+
+                    ManyToManyField
+                        增加
+                            #obj =models.Boy.objects.filter(name='leo').first()
+                            #obj.m.add(3) #会在app_boy_m里添加 id=1 boy_id =2 girl_id =3 也就是说leo的id为boy_id  3添加到了girl_iod
+                            #obj.m.add(2,4)#会在app_boy_m里添加两行数据 boy_id =2 girl_id =2 也就是说leo的id为boy_id  2添加到了girl_iod，还有一行boy_id =2 girl_id =4
+                            #obj.m.add(*[1,])#会在app_boy_m里添加一行数据 boy_id =2 girl_id =1
+
+                        删除
+                            #obj.m.remove(1)#会在app_boy_m里删除一行数据 删除的是boy_id =2 girl_id =1的数据
+                            #obj.m.remove(2,3)#会在app_boy_m里删除2行数据 删除的是boy_id =2 girl_id =2的数据与boy_id =2 girl_id =3的数据
+                            #obj.m.remove(*[4,])#会在app_boy_m里添加一行数据 boy_id =2 girl_id 
+
+                        更新
+                            #obj.m.set([1,]) #重置
+
+                        获取
+                            # tom =models.Boy.objects.filter(name='tom').first()
+                            # leo =models.Boy.objects.filter(name='leo').first() #获取leo的对象
+                            # # leo.m.add(2)
+                            # # tom.m.add(3,4)
+                            # # tom =obj.m.all() #->queryset gril 表的obj 获取leo对应的girl的对象
+                            # q =leo.m.all().filter(name='kesha').first() #filter里只能填gril表的东西，因为,all() 获取的是gril对象
+                            # print(q.name)
+
+                        删除
+                            # tom =models.Boy.objects.filter(name='tom').first()
+                            # leo =models.Boy.objects.filter(name='leo').first() #获取leo的对象
+                            # leo.m.clear() #删除与leo有关的gril
+
+                        反向操作
+                            # kesha =models.Girl.objects.filter(name='kesha').first()
+                            # # print(kesha.id,kesha.name)
+                            # m =kesha.boy_set.all().first() #拿到boy的对象
+                            # print(m.name)
+                            #注意ManyToManyField的表只能有三列数据！！！！id boy_id gril_id
+
+                        #ManyToManyField与love同时存在时
+                        #只可以进行查询以及clear操作，拿到的依然GRIL对象
+                    
+
+                    
+
     2.xss攻击
         -前端慎用safe与mark_safe
         -用的时候需要在渲染前过滤关键字

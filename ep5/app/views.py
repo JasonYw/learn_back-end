@@ -283,14 +283,14 @@ def test(request):
     # )
     # # 相当于select * from app_userinfo,app_usertype where app_usertype.id =app_userinfo.id
 
-    v =models.UserInfo.objects.filter(id__gt=1).extra(
-        where=['app_userinfo.id<%s'],
-        params=[100,],
-        tables=['app_usertype'],
-        order_by=['-app_userinfo.id'],
-        select={'uid':1}
-    )
-    print(v.query)
+    # v =models.UserInfo.objects.filter(id__gt=1).extra(
+    #     where=['app_userinfo.id<%s'],
+    #     params=[100,],
+    #     tables=['app_usertype'],
+    #     order_by=['-app_userinfo.id'],
+    #     select={'uid':1}
+    # )
+    # print(v.query)
 
 
 
@@ -307,13 +307,13 @@ def test(request):
     # print(v)
     # v =models.UserInfo.objects.all().order_by('-id','name').reverse()
     # print(v)
-    v =models.UserInfo.objects.all()
+    # v =models.UserInfo.objects.all()
     #[obj]
-    v =models.UserInfo.objects.all().only('id','name') #能写only尽量写only
+    # v =models.UserInfo.objects.all().only('id','name') #能写only尽量写only
     #[obj.id/obj.name]
-    models.UserInfo.objects.values('id','name')
+    # models.UserInfo.objects.values('id','name')
     #[id,name]
-    v =models.UserInfo.objects.all().defer('name')
+    # v =models.UserInfo.objects.all().defer('name')
     #[obj.age] #拿到除了name以外的数据
     #v =mdoels.UserInfo.objects.all().using('指定的数据库')
     #models.UserInfo.objects.all().filter().all().exclude().only().defer()  
@@ -382,18 +382,96 @@ def test(request):
 
     #不做联表，做多次查询
     #prefetch_related 
-    q =models.UserInfo.objects.all().prefetch_related('ut')
+    #q =models.UserInfo.objects.all().prefetch_related('ut')
     #select * from userinfo ->结果集
     #django内部把所有的 ut_id =[2,4]
     #select * from usertype where id in [2,4] ->结果集
-    for row in q :
-        print(row.id,row.ut.title)
+    # for row in q :
+    #     print(row.id,row.ut.title)
 
     #上述俩个操作比普通跨表效率高
     #有外键 当数据表的数据量少，则用主动联表，select_related
     #数据量多，查询频繁 用prefetch_related
 
+
+    #===========================================================================多对多
+    # objs =[
+    #     models.Boy(name="jason"),
+    #     models.Boy(name="tom")
+    # ]
+    # models.Boy.objects.bulk_create(objs,2)
+    # objs =[
+    #     models.Girl(name='desia'),
+    #     models.Girl(name='ketty')
+    # ]
+    # models.Girl.objects.bulk_create(objs,2)
+    # models.love.objects.create(b_id=1,g_id=1)
+    # models.love.objects.create(b_id=1,g_id=4)
+    # models.love.objects.create(b_id=2,g_id=4)
+    # models.love.objects.create(b_id=2,g_id=2)
+    #和tom有关系的姑娘
+    #1.
+        # obj =models.Boy.objects.filter(name="leo").first()
+        # print(obj.name)
+        # love_list =obj.love_set.all()
+        # print(love_list)
+        # for row in love_list:
+        #     print(row.g.name)
+    #2.
+        # lovelist =models.love.objects.filter(b__name='leo')
+        # for row in lovelist:
+        #     print(row.g.name)
+
     
+    #3 ->好方法
+        # lovelist =models.love.objects.filter(b__name='leo').values('g__name')
+        # for row in lovelist:
+        #     print(row['g__name'])
+    #4 ->好方法
+        # lovelist =models.love.objects.filter(b__name="leo").select_related('g')
+        # for obj in lovelist:
+        #     print(obj.g.name)
+
+
+    #增加ManyToManyField
+    #obj =models.Boy.objects.filter(name='leo').first()
+    #obj.m.add(3) #会在app_boy_m里添加 id=1 boy_id =2 girl_id =3 也就是说leo的id为boy_id  3添加到了girl_iod
+    #obj.m.add(2,4)#会在app_boy_m里添加两行数据 boy_id =2 girl_id =2 也就是说leo的id为boy_id  2添加到了girl_iod，还有一行boy_id =2 girl_id =4
+    #obj.m.add(*[1,])#会在app_boy_m里添加一行数据 boy_id =2 girl_id =1
+
+    #删除
+    #obj.m.remove(1)#会在app_boy_m里删除一行数据 删除的是boy_id =2 girl_id =1的数据
+    #obj.m.remove(2,3)#会在app_boy_m里删除2行数据 删除的是boy_id =2 girl_id =2的数据与boy_id =2 girl_id =3的数据
+    #obj.m.remove(*[4,])#会在app_boy_m里添加一行数据 boy_id =2 girl_id 
+
+    #更新
+    #obj.m.set([1,]) #重置
+
+    #获取
+    # tom =models.Boy.objects.filter(name='tom').first()
+    # leo =models.Boy.objects.filter(name='leo').first() #获取leo的对象
+    # # leo.m.add(2)
+    # # tom.m.add(3,4)
+    # # tom =obj.m.all() #->queryset gril 表的obj 获取leo对应的girl的对象
+    # q =leo.m.all().filter(name='kesha').first() #filter里只能填gril表的东西，因为,all() 获取的是gril对象
+    # print(q.name)
+
+    #删除
+    # tom =models.Boy.objects.filter(name='tom').first()
+    # leo =models.Boy.objects.filter(name='leo').first() #获取leo的对象
+    # leo.m.clear() #删除与leo有关的gril
+
+    #反向操作
+    # kesha =models.Girl.objects.filter(name='kesha').first()
+    # # print(kesha.id,kesha.name)
+    # m =kesha.boy_set.all().first() #拿到boy的对象
+    # print(m.name)
+    #注意ManyToManyField的表只能有三列数据！！！！id boy_id gril_id
+
+    #ManyToManyField与love同时存在时
+    #只可以进行查询以及clear操作，拿到的依然GRIL对象
+    obj =models.Boy.objects.filter(name='leo').first()
+    obj.m.clear()
 
     return HttpResponse('200')
 
@@ -476,6 +554,9 @@ def custom(request):
     page_info =PageInfo(current_page,per_page,num_userinfo,11,'/custom.html')
     userlist =models.UserInfo.objects.all()[page_info.start():page_info.end()]
     return render(request,'custom.html',{'userlist':userlist,'page_info':page_info})
+
+
+
 
 
 
