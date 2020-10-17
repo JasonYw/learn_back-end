@@ -566,7 +566,93 @@
         -用的时候需要在渲染前过滤关键字
         
     3.CSRF跨站请求伪造
+        -若setting设置中开启了csrf_token 则要在前端表单中加上csrf_token {% csrf_token %}
+        -在cookie中也添加了csrf_token
+        -本质为随机字符串
+        -禁用
+            -fbv
+                全站禁用
+                    -在setting中注释掉csrf表示整个网站都不做csrf验证了
+                部分禁用
+                    -引入from django.views.decorators.csrf import csrf_exempt 
+                    -在url对应的视图函数上添加csrf_exempt装饰器，@csrf_exempt 表示此网页不再验证csrf
+                局部应用
+                    -先在setting中注释掉csrf，全站禁用
+                    -引入from django.views.decorators.csrf import csrf_protect
+                    -在url对应的视图函数上添加csrf_protect装饰器，@csrf_protect 表示此网页验证csrf
+            -特殊的cbv
+                from django.views import View
+                from django.views.decorators.csrf import csrf_protect
+                from django.utils.decorators import method_decorator
 
+                @method_decorator(csrf_protect,name="post")
+                class foo():
+
+                    def dispatch(self,request,*args,**kwargs):
+                        obj =super(foo,self).dispatch(request,*args,**kwargs)
+                        return obj 
+        
+                    def get(self,request):
+                        pass
+                    
+                    def post(self,request):
+                        pass
+
+            cbv使用的时候,局部验证csrf，需要以下步骤
+                -from django.views import View
+                -from django.views.decorators.csrf import csrf_protect
+                -from django.utils.decorators import method_decorator
+                之后在类上面使用 @method_decorator(csrf_protect) 才可以，不可在类中的函数添加，也不可直接@csrf_protect
+                    -并可用name参数指定装饰器装饰的方法，@method_decorator(csrf_protect,name="post")，只装饰foo中post方法
+                    -若name="dispatch" 则相当于给所有方法都加上csrf_protect装饰器
+
+        -ajex请求
+            -第一种方法，从form表单里取csrf_token的值，在提交的formdata中携带
+                -先在form表单中放下{% csrf_token %}
+                <script src="/static/jquery.js"></script>
+                function lean_csrf1() {
+                    csrf1 = $('input[name="csrfmiddlewaretoken"]').val()
+                    var user = $('#user').val()
+                    $.ajax({
+                        url: '/csrf1/',
+                        type: 'POST',
+                        data: {
+                            'user': user,
+                            'csrfmiddlewaretoken': csrf1,
+                        },
+                        success: function (data) {
+                            console.log(data)
+                        }
+                    })
+                }
+            -第二种方法
+                使用$.cookie 需要引入jquery.cookie.js，并且依赖jquery.js
+                <scrip src="/static/jquery.js"></scrip>
+                <scrip src="/static/jquery.cookie.js"></scrip>
+                function lean_csrf2() {
+                    //从cookie获取csrf_token
+                    //document.cookie只能拿到cookie的字符串，需要分割成字典
+                    //example    "csrftoken=Yzgn4VqxlKhXLUou81ThoeIABAPLFgEX4CUB5luRGvKMws4vOG9CvMx61AeHOW0I"
+                    //使用jqurycookie帮我们自己的分割cookie 使用$.cookie 需要引入jquery.cookie.js，并且依赖jquery.js
+                    var csrf1 = $.cookie('csrftoken') //从cookie中获取,从cookie获取的再提交必须放到headers中不能放到formdata里
+                    var user = $('#user').val()
+                    $.ajax({
+                        url: '/csrf1/',
+                        type: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrf1, //在请求中添加从cookie拿的值,并且对于csrf值来说他的key的名字是固定的也是django要求的必须为X-CSRFToken
+                        },
+                        data: {
+                            'user': user,
+                        },
+                        success: function (data) {
+                            console.log(data)
+                        }
+                    })
+                }
+
+                        
+        
     4.模板引擎
         部分方法
         自定义方法
@@ -641,6 +727,7 @@
             -对用户发来的数据进行验证
             
 
+上节回顾
 
         
 

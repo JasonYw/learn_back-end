@@ -25,5 +25,6 @@ urlpatterns = [
     path('custom.html',views.custom),
     path('comment/',views.learn_xss),
     path('xss/',views.xss),
+    path('csrf1/',views.csrf1),
 ]
  

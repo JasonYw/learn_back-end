@@ -4,7 +4,9 @@ from django.shortcuts import HttpResponse, redirect, render
 from django.views import View
 from utils.pager import PageInfo
 from app import models
-
+from django.views.decorators.csrf import csrf_exempt 
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 def test(request):
@@ -579,3 +581,26 @@ def learn_xss(request):
 
 def xss(request):
     return render(request,'xss.html',{'msg':msg})
+
+
+
+#@csrf_exempt #加了此装饰器 则表示此网页不会在做csrf检测
+def csrf1(request):
+    #若setting设置中开启了csrf_token 则要在前端写csrf_token {% csrf_token %}
+    if request.method =="GET":
+        return render(request,'csrf1.html')
+    else:
+        print(request.POST)
+        return HttpResponse('200')
+    
+@method_decorator(csrf_protect,name="post") #针对cbv进行局部检测csrf,并且只针对csrf1中的post方法做检测
+class csrf2(View):
+
+    def dispatch(self, request):
+        pass
+
+    def get(self,request):
+        pass
+    
+    def post(self,request):
+        pass

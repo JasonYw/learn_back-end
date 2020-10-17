@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<head lang="en">
+    <meta charset="utf-8">
+    <title>csrf1</title>
+    <script src="/static/jquery.js"></script>
+    <script src="/static/jquery.cookie.js"></script>
+
+<body>
+    <form action="/csrf1/" method="POST">
+        {% csrf_token %}
+        <input type="text" name="user" id="user">
+        <input type="submit" value="submit">
+    </form>
+    <a onclick="lean_csrf1()">submit1</a>
+    <a onclick="lean_csrf2()">submit2</a>
+</body>
+<script>
+    function lean_csrf1() {
+        //从表单里提取
+        csrf1 = $('input[name="csrfmiddlewaretoken"]').val()
+        var user = $('#user').val()
+        $.ajax({
+            url: '/csrf1/',
+            type: 'POST',
+            data: {
+                'user': user,
+                'csrfmiddlewaretoken': csrf1,
+            },
+            success: function (data) {
+                console.log(data)
+            }
+        })
+    }
+
+    function lean_csrf2() {
+        //从cookie获取csrf_token
+        //document.cookie只能拿到cookie的字符串，需要分割成字典
+        //使用jqurycookie帮我们自己的分割cookie
+        //example    "csrftoken=Yzgn4VqxlKhXLUou81ThoeIABAPLFgEX4CUB5luRGvKMws4vOG9CvMx61AeHOW0I"
+        var csrf1 = $.cookie('csrftoken') //从cookie中获取,从cookie获取的再提交必须放到headers中不能放到formdata里
+        var user = $('#user').val()
+        $.ajax({
+            url: '/csrf1/',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrf1, //在请求中添加从cookie拿的值,并且对于csrf值来说他的key的名字是固定的也是django要求的必须为X-CSRFToken
+            },
+            data: {
+                'user': user,
+            },
+            success: function (data) {
+                console.log(data)
+            }
+        })
+
+
+    }
+</script>
+
+</html>
