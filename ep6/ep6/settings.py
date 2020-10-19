@@ -138,3 +138,35 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS =(
     os.path.join(BASE_DIR,"temp"),
 )
+
+#以下为默认值，要改哪一条单拿出来改
+SESSION_COOKIE_NAME='sessionid' #控制浏览器cookie保存随机字符串的key的名字
+SESSION_COOKIE_PATH='/'         #生效的url，'/'代表所有的页面都生效
+SESSION_COOKIE_DOMAIN=None      #生效的域
+SESSION_COOKIE_SECURE=False     #HTTPS
+SESSION_COOKIE_HTTPONLY =True   #http传输
+SESSION_COOKIE_AGE =1209600     #保存周期2周，这个优先级比程序中的低
+SESSION_EXPIRE_AT_BROWSER_CLOSE =False   #是否关闭游览器时session过期
+SESSION_SAVE_EVERY_REQUEST =False   #是否每次请求都保存session，默认修改之后才保存，若改为true 每次request都会更新失效日期，
+
+SESSION_ENGINE ='django.contrib.sessions.backends.db'  #引擎(默认值) 放在数据库中
+
+#小应用程序放在数据库中
+#但是一般都放在缓存中
+
+#SESSION_ENGINE ='django.contrib.sessions.backends.cache' #缓存
+#SESSION_CACHE_ALIAS ='default'
+#缓存 相当于另一台机器的内存中，另一台机器叫缓存服务器
+#配合django的缓存配置
+
+#SESSION_ENGINE ='django.contrib.sessions.backends.cached_db' #缓存+数据库
+#优先在缓存里面找，没有的时候去数据库里找
+
+
+
+#SESSION_ENGINE ='django.contrib.sessions.backends.file' 放在文件里
+#SESSION_FILE_PATH =None 若路径为none 则使用tempfile模块获取临时地址tempfile.gettempdir()
+
+#SESSION_ENGINE ='django.contrib.sessions.backends.signed_cookies' 放在里cookie里 相当于没用session 这个不推荐
+
+

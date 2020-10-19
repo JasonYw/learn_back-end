@@ -1,23 +1,19 @@
 {% load xx %}
 <!DOCTYPE html>
+
 <head lang="en">
     <meta charset="utf-8">
     <title></title>
 </head>
+
 <body>
-    <h1>
-        {%for key,value in k.items %}
-            <h6>
-                {{key}}{{value}}
-            </h6>
-        {% endfor %}
-        {{name | pinjie:"aa"}}
-        {% if name|my_bool  %}
-        
-        {% else %}
-        {% endif %}
-        <h2>tag</h2>
-        {% my_lower "alex" "aa" "bb" %}
-    </h1>
+    {% include "pub.html" %}
+    <div>
+        <h3>组件</h3>
+        <div class="title">标题</div>
+        <div class="content">内容</div>
+    </div>
+
 </body>
+
 </html>
