@@ -142,5 +142,37 @@
         -放在用户浏览器端的键值对
         -可以放很多，对于敏感信息不能放在cookie中
 
+今日内容
+    模版
+        -母版
+        -函数->自动执行
+        -模版里自定义函数：
+            -simpletage
+            -注册app
+            -在app中建立templatetags文件夹
+            -在templatetags中建立任意py文件,比如xx.py
+            -在文件中
+                from django import template
+                register =template.Library() #写死的，变量名也不能变
+            -在自定义函数上加@register.filter
+                -在html文件中 {% load xx %}
+                    当自定义函数只有一个参数时
+                        -在使用的地方{{ 参数｜自定义函数名 }}
+                    当自定义函数有两个参数时
+                        {{ 参数1｜函数名:参数2 }}  冒号后面不能有空格
+                    filter最多只支持两个参数
+                        若想加多个参数，则只能把其他参数都放在参数2中，之后进行split处理
+                    但是filter 可以与if一起用
+                    {% if 参数一｜函数:参数二 %}
+                        执行语句
+                    {% endif %}
+            -在自定义函数上加@register.simple_tag
+                -对于参数数量无限制
+                -{% 函数名 参数 参数 参数 %} 函数名与参数之间必须有空格，参数与参数之间也必须有空格
+                -但是不可以与if一起使用
+
+
+    中间件
+
 
     
