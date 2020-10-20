@@ -17,9 +17,10 @@ def login(request):
         if userinfo != None:
             request.session['username'] =userinfo.username
             request.session['password'] =userinfo.password
+            request.session['sex'] =userinfo.password
             if session_delay == "save":
                 request.session.set_expiry(604800)
-            return HttpResponse('test')
+            return redirect('/userindex/'+sex+'/'+username+'.html')
         else:
             return redirect('/login/')
 
@@ -43,3 +44,32 @@ def register(request):
         if sex=="female":
             models.Girl.objects.create(name=name,username=username,password=password)
         return HttpResponse('200')
+
+def user_index(request,sex,username):
+    if sex == "male":
+        all_list =models.Girl.objects.all()
+        obj =models.Boy.objects.filter(username=username).first()
+        date_list =obj.link_by_set.all().filter(boy_id_id =obj.id)
+        if date_list:
+            targetlist =[]
+            for date in date_list:
+                targetlist.append(date.girl_id.name)
+                print(date.girl_id.name)
+    if sex == "female":
+        all_list=models.Boy.objects.all()
+        obj =models.Girl.objects.filter(username=username).first()
+        date_list =obj.link_by_set.all().filter(girl_id_id =obj.id)
+        if date_list:
+            targetlist =[]
+            for date in date_list:
+                targetlist.append(date.boy_id.name)
+                print(date.boy_id.name)
+    return render(request,'user_index.html',{"user":obj,"datelist":targetlist,"alllist":all_list})
+    
+    
+
+def test(request):
+    # models.Link_by.objects.create(boy_id_id=2,girl_id_id=2)
+    # models.Link_by.objects.create(boy_id_id=2,girl_id_id=4)
+    return HttpResponse('200ok')
+
