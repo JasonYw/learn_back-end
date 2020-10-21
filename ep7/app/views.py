@@ -16,9 +16,10 @@ def login(request):
         if sex =="female":
             userinfo =models.Girl.objects.all().filter(username=username,password=password).first()
         if userinfo != None:
-            request.session['username'] =userinfo.username
-            request.session['password'] =userinfo.password
-            request.session['sex'] =userinfo.password
+            # request.session['username'] =userinfo.username
+            # request.session['password'] =userinfo.password
+            # request.session['sex'] =userinfo.sex
+            request.session['user_info'] ={'user_name':userinfo.username,'user_password':userinfo.password,'user_sex':userinfo.sex}
             if session_delay == "save":
                 request.session.set_expiry(604800)
             return redirect('/userindex/'+sex+'/'+username+'.html')
@@ -49,10 +50,14 @@ def register(request):
 
 @chek_login
 def user_index(request,sex,username):
+    '''
+        !!!思想由于已经登录成功所以可以从session里面拿数据
+    '''
     if sex == "male":
         all_list =models.Girl.objects.all()
         obj =models.Boy.objects.filter(username=username).first()
         date_list =obj.link_by_set.all().filter(boy_id_id =obj.id)
+        #dictlist =models.Boy.objects.filter(username=username).values('girl_id__username')
         if date_list:
             targetlist =[]
             for date in date_list:
@@ -61,6 +66,7 @@ def user_index(request,sex,username):
     if sex == "female":
         all_list=models.Boy.objects.all()
         obj =models.Girl.objects.filter(username=username).first()
+        #dictlist =models.Girl.objects.filter(username=username).values('boy_id__username')
         date_list =obj.link_by_set.all().filter(girl_id_id =obj.id)
         if date_list:
             targetlist =[]
@@ -97,4 +103,9 @@ def test(request):
     # models.Link_by.objects.create(boy_id_id=2,girl_id_id=2)
     # models.Link_by.objects.create(boy_id_id=2,girl_id_id=4)
     return HttpResponse('200ok')
+
+def logout(request):
+    if request.session.get('userinfo'): #删除前先做判断
+        request.session.delete(request,session.session_key) #把数据库中的session删除
+        request.session.clear() #设置cookie为超时
 

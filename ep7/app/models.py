@@ -14,5 +14,10 @@ class Girl(models.Model):
 class Link_by(models.Model):
     boy_id =models.ForeignKey('Boy',on_delete=models.CASCADE,db_index=True)
     girl_id =models.ForeignKey('Girl',on_delete=models.CASCADE,db_index=True)
+    '''
+        to关联某个表
+        to_fiel 关联某个字段
+    '''
+    #boy_id =models.ForeignKey(to='Boy',to_field='id',on_delete=models.CASCADE,db_index=True)
     
 

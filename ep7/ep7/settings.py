@@ -40,8 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'app01'
 ]
 
+# from django.middleware.csrf import CsrfViewMiddleware
+# from django.middleware.common import CommonMiddleware
+#中间件是列表是有序的
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -50,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'm1.Middle1',
+    'm1.Middle2'
 ]
 
 ROOT_URLCONF = 'ep7.urls'
