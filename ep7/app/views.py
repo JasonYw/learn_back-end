@@ -1,5 +1,6 @@
 from django.shortcuts import render,HttpResponse,redirect
 from app import models
+from django.db.models import Q
 
 # Create your views here.
 def login(request):
@@ -25,10 +26,10 @@ def login(request):
             return redirect('/login/')
 
 def chek_login(func):
-    def wrap(request):
+    def wrap(request,a=None,b=None):
         userinfo =request.session.get("username")
         if userinfo:
-            return func(request)
+            return func(request,a,b)
         else:
             return redirect('/login/')
     return wrap
@@ -45,6 +46,8 @@ def register(request):
             models.Girl.objects.create(name=name,username=username,password=password)
         return HttpResponse('200')
 
+
+@chek_login
 def user_index(request,sex,username):
     if sex == "male":
         all_list =models.Girl.objects.all()
@@ -64,11 +67,33 @@ def user_index(request,sex,username):
             for date in date_list:
                 targetlist.append(date.boy_id.name)
                 print(date.boy_id.name)
-    return render(request,'user_index.html',{"user":obj,"datelist":targetlist,"alllist":all_list})
+    return render(request,'user_index.html',{"sex":sex,"user":obj,"datelist":targetlist,"alllist":all_list})
     
-    
+def add_date(request):
+    if request.method == "POST":
+        sex =request.POST.get("usersex")
+        username =request.POST.get("username")
+        targetname =request.POST.get("targetname")
+        if request.POST.get("usersex") =="male":
+            b_obj =models.Boy.objects.filter(username=username).first()
+            g_obj =models.Girl.objects.filter(username=targetname).first()
+            a,created =models.Link_by.objects.get_or_create(boy_id_id=b_obj.id,girl_id_id=g_obj.id,defaults={'boy_id_id':b_obj.id,'girl_id_id':g_obj.id})
+        if request.POST.get("usersex") =="female":
+            b_obj =models.Boy.objects.filter(username=targetname).first()
+            g_obj =models.Girl.objects.filter(username=username).first()
+            a,created =models.Link_by.objects.get_or_create(boy_id_id=b_obj.id,girl_id_id=g_obj.id,defaults={'boy_id_id':b_obj.id,'girl_id_id':g_obj.id})
+        return HttpResponse("200")
+
+
+
 
 def test(request):
+    # models.Boy.objects.create(name="root1",username="root1",password="0125")
+    # models.Boy.objects.create(name="root2",username="root2",password="0125")
+    # models.Boy.objects.create(name="root3",username="root3",password="0125")
+    # models.Girl.objects.create(name="g1",username="g1",password="0125")
+    # models.Girl.objects.create(name="g2",username="g2",password="0125")
+    # models.Girl.objects.create(name="g3",username="g3",password="0125")
     # models.Link_by.objects.create(boy_id_id=2,girl_id_id=2)
     # models.Link_by.objects.create(boy_id_id=2,girl_id_id=4)
     return HttpResponse('200ok')

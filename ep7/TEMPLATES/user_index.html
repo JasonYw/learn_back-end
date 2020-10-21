@@ -3,11 +3,14 @@
 <head lang="en">
     <meta charset="utf-8">
     <title>user_index</title>
+    <script src="/static/jquery.js"></script>
+    <script src="/static/jquery.cookie.js"></script>
 </head>
 
 <body>
     <div>
-        <h1>{{user.name}}</h1>
+        <h1 id="username">{{user.name}}</h1>
+        <h1 id="usersex">{{sex}}</h1>
     </div>
     <div>
         <ul>
@@ -17,10 +20,38 @@
         </ul>
     </div>
     <div>
-        <ul>
+        <table>
+            <tr>
+                <td>姓名</td>
+                <td>选择</td>
+            </tr>
             {% for i in alllist %}
-            <li>{{i.name}}</li>
+            <tr>
+                <td>{{i.name}}</td>
+                <td><button value={{i.username}} onclick="add_date(this);">data</button></td>
+            </tr>
             {% endfor %}
-        </ul>
+        </table>
     </div>
+    <script>  
+        function add_date(obj){
+            alert($(obj).val())
+            $.ajax({
+                url:"/adddate/",
+                type:"POST",
+                headers:{
+                    'X-CSRFToken':$.cookie('csrftoken')
+                },
+                data:{
+                    'targetname':$(obj).val(),
+                    'username':$('#username').text(),
+                    "usersex":$("#usersex").text()
+                },
+                success:function(data){
+                    location.reload(true);
+                    window.location.reload();
+                }
+            })
+        }
+    </script>
 </body>

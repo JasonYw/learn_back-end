@@ -22,5 +22,6 @@ urlpatterns = [
     path('login/',views.login),
     path('register/',views.register),
     re_path(r'userindex/(\w+)/(\w+).html$',views.user_index),
-    path('test/',views.test)
+    path('test/',views.test),
+    path('adddate/',views.add_date)
 ]
