@@ -282,7 +282,7 @@
         -中间件 ->url->视图。。。
         -web框架的本质：socket
         -django里面没有socket
-        -别人的socket+django 遵循wsgi web服务网关接口
+        -别人的socket+django 遵循wsgi web服务网关接口->是一个协议
             -django默认用的wsgiref+django
             -uwsgi+djagno
             def main():
@@ -294,12 +294,36 @@
                     v =client.recv(1024)
                     #自己解析：各种split
 
-                    #请求相关
+                    #请求相关信息
                     django
                     #产出字符串
                     client.send(产出字符串)
                     client.close()
+        -django框架从wsgi开始
+            Wsgi+Django
+            from wsgiref.simple_server import make_server
+            def Runserver(environ,start_reqponse):
+                django框架开始
+                中间件
+                路由系统
+                视图函数
+                。。。
+                start_response('200 ok',[('Content-Type','text/html')])
+                return [bytes('<h1>hello,web!</h1>',encoding="utf-8"),]
+            if __name__ == "__mian__":
+                httpd =make_server('127.0.0.1',8000,Runserver)
+                httpd.save_forever()
+        生命周期
+            用户请求->wsgi(一套协议)->中间件->路由->视图函数->数据库模板操作，渲染->中间件->wsgi->用户
 
+        ps:__call__
+            class foo():
+                def __init__(self):
+                    pass
+                def __call__(self):
+                    pass
+            a = foo()
+            对象加名称执行__call__方法,也就是a()
 
 
 作业：
