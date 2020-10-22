@@ -276,6 +276,30 @@
                     
     中间件
         
+上节回顾+补充：
+    1.django请求的生命周期
+        -url -> 视图。。。
+        -中间件 ->url->视图。。。
+        -web框架的本质：socket
+        -django里面没有socket
+        -别人的socket+django 遵循wsgi web服务网关接口
+            -django默认用的wsgiref+django
+            -uwsgi+djagno
+            def main():
+                sock =socket.socket(socket.AF_INET,socket.SOCKET_STREAM)
+                sock.bind(('localhost',8000))
+                sock.listen(5)
+                while True:
+                    client,address =sock.accept()
+                    v =client.recv(1024)
+                    #自己解析：各种split
+
+                    #请求相关
+                    django
+                    #产出字符串
+                    client.send(产出字符串)
+                    client.close()
+
 
 
 作业：
