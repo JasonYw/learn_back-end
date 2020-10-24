@@ -325,6 +325,88 @@
             a = foo()
             对象加名称执行__call__方法,也就是a()
 
+    2.MVC MTV
+        models(数据库相关) views(html模板)  controllers(业务逻辑处理) -->MVC
+
+        models(数据库相关) tempplates(html模板) views(业务逻辑) -->MTV --djsango默认是mtv 
+    
+今日内容
+    1.中间件
+        -类
+
+            def process_request(self,request):
+                可有可无返回值
+
+            def process_response(self,request,response):
+                必须有返回值
+                return response
+
+            def process_view(self,request,callback,callback_args,callback_kwargs)
+
+            def process_exception(self,request,exception)
+
+            def process_template_response(self,request,response)
+
+        -注册中间件
+            [
+                ....有序的
+            ]
+
+        -应用：
+
+            适用于对所有请求或一部分请求做批量处理
+    
+    2.Form验证 ******
+        -需要对请求数据做验证
+        -获取到数据然后进行验证
+            -login：
+
+            -register：
+        问题：
+            无法记住上一次输入的内容，内面刷新数据消失
+            重复的进行用户数据的校验：正则，长度，是否为空
+        django提供 Form组件解决上述问题：
+            1.定义规则
+                from django.forms import Form
+                from django.forms import fields
+                class xxx(Form):
+                    #username要与前端的name属性要一致
+                    username =fields.CharField(
+                        max_length=18, #最大长度
+                        min_length=6,  #最小长度
+                        required=True, #不能为空
+                        error_messages={
+                            'required':"用户名不能为空",
+                            'min_length':"太短了",
+                            "max_length":"太长了",
+                        } #定义前面条件的错误显示
+                    )
+            2.使用
+                obj =xxx(request.POST) 先把用户数据传进去
+                obj.is_valid() 进行匹配，得到bool值，True为格式正确
+                    匹配流程
+                        request.POST(KEY) KEY为前端form的name属性
+                        也就是xxx中的字段名称=request.POST.get(KEY)的key=前端表单中name的属性
+                        request.POST中的数据量超过xxx中的规则，则key与xxx中相同的进行验证，不同不进行验证
+                        写了几个规则就验证几个
+                obj.errors 所有的错误信息
+                obj.cleaned_data正确信息
+
+
+
+作业：
+    创建project: 学习form
+    目标：做登录和注册
+        格式验证
+        保留上次登录的值
+        注册两次密码一致
+    
+
+    
+    
+
+
+
 
 作业：
     1.相亲管理 

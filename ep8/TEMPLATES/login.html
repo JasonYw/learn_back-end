@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<head lang="en">
+    <meta charset="utf-8">
+    <script src="/static/jquery.js"></script>
+    <title>login</title>
+
+<body>
+    <div id="id_login">
+        <form action="/login/" method="POST">
+            {% csrf_token %}
+            <p>
+                username:<input type="text" name="username" onblur="check_empty(this);">
+                {{obj.errors.username.0}}
+            </p>
+            <p>
+                password:<input type="text" name="password" onblur="check_empty(this);">
+                {{obj.errors.password.0}}
+            </p>
+            <input type="submit" value="login">
+
+        </form>
+        <button onclick="register()">register</button>
+    </div>
+    <div id="id_register" style="display: none;">
+        <form action="/register/" method="POST">
+            {% csrf_token %}
+            <p>username:<input type="text" name="username" onblur="check_empty(this);"></p>
+            <p>password:<input type="text" name="password" id="password_1" onblur="check_empty(this);"></p>
+            <p>password_again:<input type="text" name="password_again" id="password_2"></p>
+            <p>name:<input type="text" name="name" onblur="check_empty(this);"></p>
+            <p>
+                <span>boy<input type="radio" name="sex" value="male" checked></span>
+                <span>girl<input type="radio" name="sex" value="female"></span>
+            </p>
+            <input type="submit" onclick="return check_password_agin();">
+        </form>
+        <button onclick="to_login()">cancle</button>
+    </div>
+
+</body>
+<script>
+    function register() {
+        $("#id_login").css("display", "none")
+        $('#id_register').css("display", "block")
+    }
+
+    function to_login() {
+        $('#id_register').css("display", "none")
+        $("#id_login").css("display", "block")
+    }
+
+    function check_empty(obj) {
+        if ($(obj).val() == "") {
+            $(obj).attr("placeholder", "输入框不能为空")
+            $(obj).focus()
+        }
+    }
+
+    function check_password_agin() {
+        if ($("#password_1").val() != $("#password_2").val()) {
+            $("#password_2").val('')
+            $("#password_2").attr("placeholder", "前后密码不一致")
+            return false
+        }
+    }
+</script>
+
+</head>
