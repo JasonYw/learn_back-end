@@ -391,6 +391,71 @@
                         写了几个规则就验证几个
                 obj.errors 所有的错误信息
                 obj.cleaned_data正确信息
+            3.内部原理
+                is_valid
+                    内部工作：
+                        1.每一次对FORM子类的实例化时，
+                            先把子类的字段放到self.fields={
+                                'username':正则表达式，
+                                'password'：正则表达式
+                            }
+                        2.循环self.fields:
+                            flag =True
+                            errors
+                            clened_data
+                            for key,v in self.fields.items():
+                                key是字符串
+                                v是正则表达式
+                                input_value =request.POST.get(key)
+                                正则表达式和input_value
+                                if 正则与input_value不匹配:
+                                    flag =False
+                            return flag
+
+
+内容回顾：
+    1.请求声明周期
+        请求->wsgi->中间件->路由->视图->中间件->wsgi->用户
+    2.session 
+        保存在服务器端的键值对
+    3.xss
+        若提交的数据是js代码，要对用户提交的数据进行过滤，要认为用户提交的数据是不安全的，把用户提交的数据当成字符串渲染，不能当成代码
+    4.csrf
+        生成一个随机tocken，用户需要携带随机tocken 本质为一个随机字符串，来源是上一次的请求
+
+
+今日内容：
+    1.FORM
+        -对用户提交数据进行校验
+            -form提交（刷新，失去上次的内容）
+                a.LoginForm(FORM)
+                    字段 =xxx.XXField(规则) #本质验证规则
+                b.obj =LoginForm(用户提交的数据:dict,所以request.get/post都可以)
+                c.result =obj.is_valid() 进行校验返回bool值
+                d.obj.cleaned_data
+                e.obj.errors
+            总结：
+                class Foo(Form)：
+                    字段 =内置正则表达式
+                        验证：
+                            required
+                            max_length
+                            min_length
+                            error_messages
+                        生成html标签->并不是目的->目的：保留上次输入内容：
+                            widget  自动生成HTML标签  选择生成input select textarea
+                            label   前缀后面的前面的文字 比如'用户名:'的用户名
+                            label_suffix 前缀 比如'用户名:'的：
+                            initial  默认值
+                            help_text 提示信息
+                            #localize 是否支持本地化，比如时间转化
+                            disabled=True 是否可以编辑
+                    字段 =自定义正则表达式
+            -ajax提交（不刷新，上次内容自动默认保留）
+            --> PS：Ajax提交>Form提交
+    
+    
+    
 
 
 

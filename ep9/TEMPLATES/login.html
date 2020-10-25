@@ -7,20 +7,21 @@
 
 <body>
     <div id="id_login">
-        <form action="/login/" method="POST">
+        <form action="/login/" method="POST" id="form1">
             {% csrf_token %}
             <p>
-                username:<input type="text" name="username" onblur="check_empty(this);">
+                username:<input type="text" name="username" id="username" onblur="check_empty(this);">
                 {{obj.errors.username.0}}
             </p>
             <p>
-                password:<input type="text" name="password" onblur="check_empty(this);">
+                password:<input type="text" name="password" id="password" onblur="check_empty(this);">
                 {{obj.errors.password.0}}
             </p>
             {{wrong}}
             <input type="submit" value="login">
 
         </form>
+        <button onclick="sbumitform()">submit</button>
         <button onclick="register()">register</button>
     </div>
     <div id="id_register" style="display: none;">
@@ -61,6 +62,32 @@
         //     $("#password_2").attr("placeholder", "前后密码不一致")
         //     return false
         // }
+    }
+
+    function sbumitform() {
+
+        $.ajax({
+            type: "POST",
+            url: "/ajaxlogin/",
+            //会把form提交的键值对 打包放进data中，包括csrf 
+            //username=root&password=0125&csrftoken=ddasadsada... 打包成字符串了
+            //但是后端使用没有区别，因为以前提交的字典，提交的时候也是内部转换成字符串发过去
+            data: $("#form1").serialize(),
+            dataType: "JSON",
+            success: function (arg) {
+                console.log(arg)
+                if (arg.status == false) {
+                    $(".c1").remove()
+                    $.each(arg.message, function (index, value) {
+                        console.log(index, value)
+                        var tag = document.createElement('span')
+                        tag.innerHTML = value[0]
+                        tag.className = "c1"
+                        $('#form1').find('input[name="' + index + '"]').after(tag)
+                    })
+                }
+            }
+        });
     }
 </script>
 
