@@ -23,5 +23,6 @@ urlpatterns = [
     path('register/',views.register),
     path('ajaxlogin/',views.ajaxlogin),
     path('test/',views.test),
+     path('register_1/',views.register_1),
 ]
 

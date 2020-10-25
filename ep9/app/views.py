@@ -26,7 +26,7 @@ class LoginForm(Form):
             "max_length":"密码大于最大长度"
         }
     )
-    
+
 class RegisterForm(LoginForm):
     password_again =fields.CharField(
         required=True,
@@ -38,8 +38,50 @@ class RegisterForm(LoginForm):
             "max_length":"密码前后不一致",
         }
     )
+   
+class RegisterForm_1(Form):
+    username =fields.CharField(
+        required=True,
+        min_length=3,
+        max_length=15,
+        error_messages ={
+            "required":"用户名不能为空",
+            "min_length":"用户名小于最小长度",
+            "max_length":"用户名大于最大长度"
+        }
+    )
+    password =fields.CharField(
+        required=True,
+        min_length=3,
+        max_length=30,
+        error_messages ={
+            "required":"密码不能为空",
+            "min_length":"密码小于最小长度",
+            "max_length":"密码大于最大长度"
+        }
+    )
 
-    
+    password_again =fields.CharField(
+        required=True,
+        min_length=3,
+        max_length=30,
+        error_messages ={
+            "required":"密码前后不一致",
+            "min_length":"密码前后不一致",
+            "max_length":"密码前后不一致",
+        }
+    )
+    email =fields.EmailField(
+        error_messages={
+            "invalid":"email格式不正确"
+        }
+    )
+    phone =fields.RegexField(
+        '138\d+',
+        error_messages={
+            "invalid":"手机号格式不正确"
+        }
+    )
 
 
 def login(request):
@@ -100,19 +142,33 @@ def register(request):
             return HttpResponse("200")
     return redirect("/login/")
 
+def register_1(request):
+    if request.method =='GET':
+        obj =RegisterForm_1()
+        return render(request,'register_1.html',{"obj":obj})
+    if request.method =='POST':
+        obj =RegisterForm_1(request.POST)
+        if obj.is_valid():
+            print(obj.cleaned_data)
+        else:
+            print(obj.errors)
+        return render(request,'register_1.html',{"obj":obj})
+
+
+
 class TestForm(Form):
     t1 =fields.CharField(
         required=True,
         max_length=8,
         min_length=2,
         #=====================================以下生成html用
-        widget=None, #自动生成HTML标签  选择生成input select textarea
-        label='label', #前端 {{obj.t1.label}} 就可以拿到这个值
-        label_suffix='----》',
-        initial='666', #
-        help_text='help_text',
-        #localize= ,#是否支持本地化，比如时间转化
-        disabled=True, #是否可以编辑
+        # widget=None, #自动生成HTML标签  选择生成input select textarea
+        # label='label', #前端 {{obj.t1.label}} 就可以拿到这个值
+        # label_suffix='----》',
+        # initial='666', #
+        # help_text='help_text',
+        # #localize= ,#是否支持本地化，比如时间转化
+        # disabled=True, #是否可以编辑
         #====================================以上注释要放在一起用,可以拼接成html标签
         #validators=[],#自定义验证规则
         error_messages={
@@ -121,6 +177,7 @@ class TestForm(Form):
             "max_length":"大于最大长度",
         }
     )
+    
     t2 =fields.IntegerField(
         #默认required =True
         #若格式错误则是key为invalid
@@ -172,4 +229,5 @@ def test(request):
             print(obj.cleaned_data)
         else:
             print(obj.errors)
-        return render(request,'test.html')
+    return render(request,'test.html',{"obj":obj})
+        

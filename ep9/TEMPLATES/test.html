@@ -6,22 +6,28 @@
     <title>login</title>
 
 <body>
-    <div id="id_login" style="display: None;">
-        <form action="/test/" method="POST" id="form1">
+    <div id="id_login">
+        <form action="/test/" method="POST" id="form1" novalidate>
             {% csrf_token %}
             <p>
+                {{ obj.t1 }} {{obj.errors.t1.0}}
+            </p>
+            <p>
+                {{ obj.t2 }} {{obj.errors.t2.0}}
+            </p>
+            <p>
                 <!-- {{ obj.as_p }} -->
-                {{ obj.t1.label }}{{ obj.t1.label_suffix }}
+                <!-- {{ obj.t1.label }}{{ obj.t1.label_suffix }}
                 {{ obj.t1.help_text }}
-                {{ obj.t1 }}
-                <!-- char:<input type="text" name="t1"> -->
-                {{obj.errors.t1.0}}
+                {{ obj.t1 }} -->
+                <!-- char:<input type="text" name="t1">
+                {{obj.errors.t1.0}} -->
             </p>
             <p>
-                int:<input type="text" name="t2">
-                {{obj.errors.t2.0}}
+                <!-- int:<input type="text" name="t2">
+                {{obj.errors.t2.0}} -->
             </p>
-            <p>
+            <!-- <p>
                 email:<input type="text" name="t3">
                 {{obj.errors.t3.0}}
             </p>
@@ -48,7 +54,7 @@
             <p>
                 Regex:<input type="text" name="t9">
                 {{obj.errors.t9.0}}
-            </p>
+            </p> -->
             <input type="submit" value="login">
 
         </form>
@@ -56,7 +62,7 @@
     </div>
 
 
-    <div>
+    <!-- <div>
         <form action="/test/" method="POST" id="form1">
             {% csrf_token %}
             <p>
@@ -65,7 +71,7 @@
 
         </form>
         <button onclick="register()">register</button>
-    </div>
+    </div> -->
 
 
 

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<head lang="en">
+    <meta charset="utf-8">
+    <script src="/static/jquery.js"></script>
+    <title>login</title>
+</head>
+
+<body>
+    <div>
+        <form action="/register_1/" method="POST">
+            {% csrf_token %}
+            <!-- <p>username:<input type="text" name="username"></p>
+            <p>password:<input type="text" name="password"></p>
+            <p>password_again:<input type="text" name="password_again"></p>
+            <p>email:<input type="text" name="email"></p>
+            <p>phone:<input type="text" name="phone"></p> -->
+            <p>username:{{ obj.username }} {{ obj.errors.username.0 }}</p>
+            <p>password:{{ obj.password }} {{ obj.errors.password.0 }}</p>
+            <p>password_again:{{ obj.password_again }} {{ obj.errors.password_again.0 }}</p>
+            <p>email:{{ obj.email }} {{ obj.errors.email.0 }}</p>
+            <p>phone:{{ obj.phone }} {{ obj.errors.phone.0 }}</p>
+            <input type="submit">
+        </form>
+    </div>
+</body>

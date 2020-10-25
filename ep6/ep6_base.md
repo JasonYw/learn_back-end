@@ -427,7 +427,7 @@
 今日内容：
     1.FORM
         -对用户提交数据进行校验
-            -form提交（刷新，失去上次的内容）
+            form提交（刷新，失去上次的内容）
                 a.LoginForm(FORM)
                     字段 =xxx.XXField(规则) #本质验证规则
                 b.obj =LoginForm(用户提交的数据:dict,所以request.get/post都可以)
@@ -451,10 +451,130 @@
                             #localize 是否支持本地化，比如时间转化
                             disabled=True 是否可以编辑
                     字段 =自定义正则表达式
+            保留上次提交的内容：
+                1.生成HTML标签
+                    视图函数
+                        get请求：
+                            obj =TestForm()
+                            return render(request,'test.html',{'obj':obj})
+                            #<input type="text" name='t1'>
+                        post请求：
+                            obj =TestForm(request.POST)
+                            return render(request,'test.html',{'obj':obj})
+                            #<input type="text" name='t1' values='xxx'>
+                    前端
+                        {{ obj.t1 }} {{ obj.errors.t1.0 }}
+                    
+
+                    
             -ajax提交（不刷新，上次内容自动默认保留）
             --> PS：Ajax提交>Form提交
     
-    
+整理：
+    1.验证
+        <form action="/login/" method="POST" id="form1">
+            {% csrf_token %}
+            <p>
+                username:<input type="text" name="username" id="username" onblur="check_empty(this);">
+                {{obj.errors.username.0}}
+            </p>
+            <p>
+                password:<input type="text" name="password" id="password" onblur="check_empty(this);">
+                {{obj.errors.password.0}}
+            </p>
+            {{wrong}}
+            <input type="submit" value="login">
+        </form>
+        class LoginForm(Form):
+            username =fields.CharField(
+                required=True,
+                min_length=3,
+                max_length=15,
+                error_messages ={
+                    "required":"用户名不能为空",
+                    "min_length":"用户名小于最小长度",
+                    "max_length":"用户名大于最大长度"
+                }
+            )
+            password =fields.CharField(
+                required=True,
+                min_length=3,
+                max_length=30,
+                error_messages ={
+                    "required":"密码不能为空",
+                    "min_length":"密码小于最小长度",
+                    "max_length":"密码大于最大长度"
+                }
+            )
+        -Form提交
+        def login(request):
+            if request.method =="GET":
+                return render(request,"login.html")
+            if request.method =="POST":
+                logininfo =LoginForm(request.POST)
+                if logininfo.is_valid():
+                    if logininfo.cleaned_data.get("username") =="root" and logininfo.cleaned_data.get("password")=="0125":
+                        return HttpResponse("200")
+                    return render(request,"login.html",{"wrong":"用户名密码错误"})
+                else:
+                    return render(request,"login.html",{"obj":logininfo})
+        =================>可以验证，无法保留上次内容
+        -Ajax提交
+        def ajaxlogin(request):
+            ret ={
+                'status':True,
+                'message':None,
+            }
+            logininfo =LoginForm(request.POST)
+            if logininfo.is_valid():
+                print(logininfo.cleaned_data.get("username"))
+                print(request.POST)
+            else:
+                ret['status'] =False
+                ret['message'] =logininfo.errors
+                #print(logininfo.errors) #logininfo.errors 可以转换成json
+                #jsdata =json.dumps(logininfo.errors)
+                #print(jsdata)
+            return HttpResponse(json.dumps(ret))
+        =================>也可以验证，可以保留，完美
+    2.解决Form无法保留的问题
+        -Form生成html标签（禁用意义不大）
+        -GET
+            logininfo =LoginForm()
+            Form生成Html表签<input ..../>
+        -POST
+            logininfo =LoginForm(request.POST)
+            Form生成Html表签<input .... value='xxx'/>
+        -html
+            <form action="/login/" method="POST">
+                {% csrf_token %}
+                <p>username:{{ obj.username }} {{ obj.errors.username.0 }}</p>
+                <p>password:{{ obj.password }} {{ obj.errors.password.0 }}</p>
+                <input type="submit">
+            </form>
+        -views
+            def login(request):
+                if request.method =='GET':
+                    logininfo =LoginForm()
+                    return render(request,'register_1.html',{"obj":logininfo})
+                if request.method =='POST':
+                    logininfo =LoginForm(request.POST)
+                    if obj.is_valid():
+                        print(logininfo.cleaned_data)
+                    else:
+                        print(logininfo.errors)
+                    return render(request,'register_1.html',{"obj":logininfo})
+        =================>解决了Form无法保留值的问题
+    3.日后使用：
+        -Ajax，仅用验证功能，保留功能Ajax帮我们实现
+        -Form，验证功能，自动生成标签的功能
+
+疑问：
+    1.如何生成其他标签，比如下拉框，下拉框的数据如何定制
+        -默认值
+        -上次输的值
+    2.额外的正则规则
+
     
 
 
